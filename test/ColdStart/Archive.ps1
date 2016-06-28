@@ -5,7 +5,8 @@
 
 param (
     [Alias("t")]$targetApp = "HelloWorldMvc",
-    [Alias("f")]$framework = "netcoreapp1.0"
+    [Alias("f")]$framework = "netcoreapp1.0",
+    [Alias("n")]$testName = "test"
 )
 
 & (Join-Path $PSScriptRoot SetEnv.ps1)
@@ -41,6 +42,8 @@ for ($j = 0; $j -lt $averages.Length; $j++) {
 
 $scriptOutput = [System.String]::Join(",", $averages)
 $scriptOutput | Out-File $global:outputFile -Append
+$testNameFile = [System.IO.Path]::Combine($outputDir, $testName)
+$testName | Out-File $testNameFile
 
 mv $outputDir (Join-Path $outputsDir $outputFileName)
 

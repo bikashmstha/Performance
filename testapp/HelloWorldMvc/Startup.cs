@@ -24,6 +24,11 @@ namespace HelloWorldMvc
 
         public static void Main(string[] args)
         {
+#if MCJ
+            var context = System.Runtime.Loader.AssemblyLoadContext.Default;
+            context.SetProfileOptimizationRoot(".");
+            context.StartProfileOptimization("startup.prof");
+#endif
             var config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)

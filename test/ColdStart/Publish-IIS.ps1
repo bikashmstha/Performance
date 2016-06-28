@@ -1,12 +1,27 @@
 ## Build and publish the application into workspace, and register IIS sites
 param (
-    [Alias("t")]$targetApp = "HelloWorldMvc",
-    [Alias("f")]$framework = "netcoreapp1.0",
-    [Alias("d")]$appDir
+    [Alias("t")]
+    $targetApp = "HelloWorldMvc",
+
+    [Alias("f")]
+    $framework = "netcoreapp1.0",
+
+    [Alias("d")]
+    $appDir,
+
+    [Alias("p")]
+    $precompile
 )
 
+$params = @{ "targetApp" = $targetApp; "framework" = $framework; "appDir" = $appDir }
+if ($precompile)
+{
+    $params.precompile = $precompile
+}
+
 ## prereq: IIS enabled, aspnetCoreModule installed, uCRT, , .NET Framework 4.5.1 Developer Pack
-& (Join-Path $PSScriptRoot Publish.ps1) -t $targetApp -f $framework -d $appDir
+$publishScript = Join-Path $PSScriptRoot Publish.ps1
+& $publishScript @params
 
 $dotnetHome = [System.IO.Path]::Combine($env:LocalAppData, "Microsoft" , "dotnet")
 $dotnetExe = Join-Path $dotnetHome "dotnet.exe"
@@ -50,7 +65,6 @@ if (! (Test-Path $warmSiteLocation)) {
     Copy-Item $coldSiteLocation $warmSiteLocation -Force -Recurse
 }
 
-$hostname = hostname
 Icacls $dotnetHome /grant IIS_IUSRS:`(OI`)`(CI`)F /T
 Icacls $global:publishLocation /grant IIS_IUSRS:`(OI`)`(CI`)F /T
 

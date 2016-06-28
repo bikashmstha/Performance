@@ -3,7 +3,8 @@
 
 param (
     [Alias("t")]$targetApp = "HelloWorldMvc",
-    [Alias("f")]$framework = "netcoreapp1.0"
+    [Alias("f")]$framework = "netcoreapp1.0",
+    [Alias("n")]$testName = "test"
 )
 
 $coldSiteName = "${targetApp}Cold"
@@ -20,4 +21,4 @@ cmd /c $env:windir\System32\inetsrv\APPCMD DELETE SITE "${warmSiteName}"
 cmd /c $env:windir\System32\inetsrv\APPCMD DELETE APPPOOL /apppool.name:$coldAppPoolName
 cmd /c $env:windir\System32\inetsrv\APPCMD DELETE APPPOOL /apppool.name:$warmAppPoolName
 
-& (Join-Path $PSScriptRoot Archive.ps1) -t $targetApp -f $ framework
+& (Join-Path $PSScriptRoot Archive.ps1) -t $targetApp -f $ framework -n $testName

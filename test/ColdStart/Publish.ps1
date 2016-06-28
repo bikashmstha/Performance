@@ -1,9 +1,16 @@
 ## Build and publish the application into workspace
 
 param (
-    [Alias("t")]$targetApp = "HelloWorldMvc",
-    [Alias("f")]$framework = "netcoreapp1.0",
-    [Alias("d")]$appDir
+    [Alias("t")]
+    $targetApp = "HelloWorldMvc",
+
+    [Alias("f")]
+    $framework = "netcoreapp1.0",
+
+    [Alias("d")]$appDir,
+
+    [Alias("p")]
+    $precompile
 )
 
 ## cleaning package caches, we are doing this because we are close to release
@@ -55,6 +62,14 @@ if (! (Test-Path $appLocation) )
 
 ## publish targeted application
 pushd $appLocation
+
+if ($precompile)
+{
+    $modifyJsonScript = [System.IO.Path]::Combine($PSScriptRoot, "..", "..", "tools", "ProjectModifier", "modify-project.js")
+    Copy-Item project.json project.json.bak
+    node $modifyJsonScript precompile=$precompile
+}
+
 dotnet restore --infer-runtimes
 
 if (Test-Path $global:publishLocation) {
@@ -64,6 +79,11 @@ if (Test-Path $global:publishLocation) {
 
 $appPublishLocation = Join-Path $global:publishLocation ($targetApp)
 dotnet publish -o $appPublishLocation --configuration Release -f $framework
+
+if (Test-Path project.json.bak)
+{
+    Move-Item project.json.bak project.json -force
+}
 
 ## archive the lock.json file for record because desktop app does not have .deps.json
 $outputDir = Split-Path $global:outputFile
