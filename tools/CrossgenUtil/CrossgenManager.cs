@@ -33,7 +33,7 @@ namespace CrossgenUtil
                 if (Excludes == null || !Excludes.Contains(moduleName))
                 {
                     var niName = Path.Combine(AppDir, moduleName + ".ni.dll");
-                    RunCommandEmbedded(CrossgenPath, $"/Platform_Assemblies_Paths {SharedFrameworkPath} /App_Paths {AppDir} /out {moduleName}.ni.dll {moduleName}.dll", AppDir);
+                    RunCommandEmbedded(CrossgenPath, $"/Platform_Assemblies_Paths \"{SharedFrameworkPath}\" /App_Paths \"{AppDir}\" /out {moduleName}.ni.dll {moduleName}.dll", AppDir);
 
                     var niDllLocation = Path.Combine(AppDir, $"{moduleName}.ni.dll");
                     if (File.Exists(niDllLocation))
@@ -42,7 +42,7 @@ namespace CrossgenUtil
 
                         if (symbols)
                         {
-                            RunCommandEmbedded(CrossgenPath, $"/Platform_Assemblies_Paths {SharedFrameworkPath} /App_Paths {AppDir} /CreatePDB {AppDir} {niDllLocation}", AppDir);
+                            RunCommandEmbedded(CrossgenPath, $"/Platform_Assemblies_Paths \"{SharedFrameworkPath}\" /App_Paths \"{AppDir}\" /CreatePDB {AppDir} {niDllLocation}", AppDir);
                         }
 
                         File.Delete(dllLocation);
