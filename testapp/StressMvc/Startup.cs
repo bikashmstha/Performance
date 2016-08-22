@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Runtime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,12 +12,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StarterMvc.Models;
 using StarterMvc.Services;
-using System.IO;
-using Microsoft.AspNetCore.Server.Kestrel.Filter;
-using System.Security.Cryptography.X509Certificates;
-using System.Runtime;
-using Microsoft.AspNetCore.Server.WebListener;
-using Microsoft.Net.Http.Server;
 
 namespace StarterMvc
 {
@@ -51,7 +43,7 @@ namespace StarterMvc
         {
             // Add framework services.            
             services.AddEntityFrameworkSqlServer()
-                .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));               
+                .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -71,7 +63,6 @@ namespace StarterMvc
 
             if (env.IsDevelopment())
             {
-                //app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
@@ -89,7 +80,6 @@ namespace StarterMvc
             {
                 ReplaceFeature = Boolean.Parse(Configuration["WebSocketOptions:ReplaceFeature"])
             });
-            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {
@@ -126,13 +116,13 @@ namespace StarterMvc
                     hostingInWebListener = true;
                 }
             }
-            catch (Exception) //Ignore if the option is not provided.
+            catch //Ignore if the option is not provided.
             {
             }
 
             try
             {
-                if (Boolean.Parse(config["SecurityOption:EnableHTTPS"]) == true)
+                if (bool.Parse(config["SecurityOption:EnableHTTPS"]))
                 {
                     useHttps = true;
                     Console.WriteLine("Enabled HTTPS");
@@ -143,10 +133,11 @@ namespace StarterMvc
             }
 
             var hostBuilder = new WebHostBuilder();
-            if (hostingInWebListener) {
+            if (hostingInWebListener)
+            {
                 hostBuilder.UseWebListener(options =>
                 {
-                    options.Listener.AuthenticationManager.AuthenticationSchemes = AuthenticationSchemes.AllowAnonymous;
+                    options.ListenerSettings.Authentication.AllowAnonymous = true;
                 });
             }
             else
