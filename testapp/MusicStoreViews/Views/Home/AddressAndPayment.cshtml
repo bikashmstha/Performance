@@ -1,0 +1,31 @@
+﻿@model Order
+@{
+    ViewBag.SiteTitle = "ASP.NET MVC Music Store";
+    ViewBag.Title = "Address And Payment";
+}
+
+<form asp-antiforgery="false">
+    <h2>Address And Payment</h2>
+    <hr />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <fieldset>
+        <legend>Shipping Information</legend>
+
+        @Html.EditorFor(m => m.Name)
+        @Html.EditorFor(m => m.Address)
+        @Html.EditorForModel()
+    </fieldset>
+    <fieldset>
+        <legend>Payment</legend>
+        <p>We're running a promotion: all music is free with the promo code: "FREE"</p>
+
+        <div class="editor-label">
+            <label title="Promo Code">Promo Code</label>
+        </div>
+        <div class="editor-field">
+            @Html.TextBox("PromoCode")
+        </div>
+    </fieldset>
+
+    <input type="submit" value="Submit Order" />
+</form>
