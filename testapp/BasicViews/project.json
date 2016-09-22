@@ -26,7 +26,7 @@
     },
     "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0-*",
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0-*",
-    "Microsoft.AspNetCore.Server.WebListener": "0.2.0-*",
+    "Microsoft.AspNetCore.Server.WebListener": "1.1.0-*",
     "Microsoft.AspNetCore.StaticFiles": "1.1.0-*",
     "Microsoft.EntityFrameworkCore.InMemory": "1.1.0-*",
     "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0-*",

@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "Benchmarks.Utility": "1.1.0-*",
-    "Microsoft.NETCore.Platforms": "1.0.1-*",
+    "dotnet-test-xunit": "2.2.0-*",
     "Microsoft.Extensions.Configuration": "1.1.0-*",
     "Microsoft.Extensions.Logging": "1.1.0-*",
     "Microsoft.Extensions.Logging.Console": "1.1.0-*",
@@ -25,8 +25,7 @@
     "Microsoft.Extensions.RuntimeEnvironment.Sources": {
       "version": "1.1.0-*",
       "type": "build"
-    },
-    "dotnet-test-xunit" : "2.2.0-*"
+    }
   },
   "frameworks": {
     "netcoreapp1.0": {

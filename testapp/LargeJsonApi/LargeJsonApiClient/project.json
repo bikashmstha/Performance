@@ -24,7 +24,11 @@
         "portable-net451+win8"
       ]
     },
-    "net451": {}
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Net.Http": ""
+      }
+    }
   },
   "commands": {
     "run": "LargeJsonApiClient"

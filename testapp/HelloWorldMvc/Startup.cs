@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
 
 namespace HelloWorldMvc
 {
@@ -30,7 +28,7 @@ namespace HelloWorldMvc
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
-                
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://+:5000")
