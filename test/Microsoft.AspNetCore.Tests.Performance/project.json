@@ -15,6 +15,7 @@
   "dependencies": {
     "Benchmarks.Utility": "1.1.0-*",
     "dotnet-test-xunit": "2.2.0-*",
+    "Microsoft.DotNet.InternalAbstractions": "1.0.0",
     "Microsoft.Extensions.Configuration": "1.1.0-*",
     "Microsoft.Extensions.Logging": "1.1.0-*",
     "Microsoft.Extensions.Logging.Console": "1.1.0-*",
@@ -30,8 +31,8 @@
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
-	      "Microsoft.NETCore.App": {
-          "version": "1.0.0-*",
+        "Microsoft.NETCore.App": {
+          "version": "1.1.0-*",
           "type": "platform"
         }
       },
