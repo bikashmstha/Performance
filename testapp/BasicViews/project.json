@@ -35,11 +35,7 @@
     "Microsoft.Extensions.Configuration.Json": "1.1.0-*"
   },
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "portable-dnxcore50+net45+win8+wp8+wpa81",
-        "portable-net45+win8+wp8"
-      ],
+    "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
           "version": "1.1.0-*",
@@ -56,6 +52,10 @@
     }
   },
   "publishOptions": {
+    "include": [
+        "**/*.cshtml",
+        "appsettings.json"
+    ],
     "exclude": [
       "node_modules",
       "bower_components",

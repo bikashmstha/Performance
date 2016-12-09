@@ -4,19 +4,11 @@
     "emitEntryPoint": true,
     "warningsAsErrors": true,
     "preserveCompilationContext": true,
-    "compile": {
-      "exclude": [
-        "wwwroot",
-        "node_modules",
-        "bower_components"
-      ]
-    },
     "copyToOutput": {
-      "include": [
-        "Views",
-        "appsettings.json",
-        "seed.sql"
-      ]
+        "include": [
+          "appsettings.json",
+          "seed.sql"
+        ]
     }
   },
   "dependencies": {
@@ -31,16 +23,13 @@
     "Microsoft.Extensions.Configuration.Json": "1.1.0-*",
     "Microsoft.Extensions.Logging.Console": "1.1.0-*"
   },
-  "commands": {
-    "web": "BasicApi"
-  },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
           "version": "1.1.0-*",
           "type": "platform"
-        }
+        },
       },
       "imports": [
         "dnxcore50",

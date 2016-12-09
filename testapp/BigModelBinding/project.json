@@ -20,15 +20,15 @@
   },
   "dependencies": {
     "Microsoft.AspNetCore.Mvc": "1.1.0-*",
+     "Microsoft.AspNetCore.Razor.Tools": {
+      "type": "build",
+      "version": "1.0.0-*"
+    },
     "Microsoft.AspNetCore.Server.Kestrel": "1.1.0-*",
     "Microsoft.AspNetCore.StaticFiles": "1.1.0-*",
     "Microsoft.Extensions.Configuration.Json": "1.1.0-*",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.CommandLine": "1.1.0-*",
-    "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-*",
-      "type": "build"
-    }
+    "Microsoft.Extensions.Configuration.CommandLine": "1.1.0-*"
   },
   "tools": {
     "Microsoft.AspNetCore.Razor.Tools": {
@@ -37,7 +37,7 @@
     }
    },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "imports": [
         "dnxcore50",
         "portable-net451+win8"
