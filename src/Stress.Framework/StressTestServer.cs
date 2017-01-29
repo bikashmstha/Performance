@@ -47,7 +47,7 @@ namespace Stress.Framework
 
             var baseAddress = $"http://localhost:{_port}/";
 
-            var p = new DeploymentParameters(PathHelper.GetTestAppFolder(_testName), _serverType, RuntimeFlavor.Clr, RuntimeArchitecture.x86)
+            var p = new DeploymentParameters(PathHelper.GetTestAppFolder(_testName), _serverType, RuntimeFlavor.Clr, RuntimeArchitecture.x64)
             {
                 SiteName = _testName,
                 ApplicationBaseUriHint = baseAddress,

@@ -25,6 +25,7 @@ namespace MultipartPost
             });
             services.Configure<KestrelServerOptions>(options =>
             {
+                options.Limits.MaxRequestLineSize = 1 * (int)OneKilobyte;
                 options.Limits.MaxRequestBufferSize = 4 * OneKilobyte; //let's customize the max buffer size per request
             });
             services.AddMvc();
@@ -57,7 +58,6 @@ namespace MultipartPost
             Console.WriteLine($"Running in { IntPtr.Size * 8 } bits");
 
             var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
 

@@ -20,7 +20,7 @@ namespace Stress.Framework
 
         internal Func<HttpClient> ClientFactory { get; set; }
 
-        public void IterateAsync(Action<HttpClient> iterate)
+        public async Task IterateAsync(Func<HttpClient, Task> iterate)
         {
             var iterationsPerClient = Iterations / Clients;
             var iterations = Enumerable.Repeat(iterationsPerClient, Clients).ToArray();
@@ -36,17 +36,17 @@ namespace Stress.Framework
             using (Collector.StartCollection())
             {
                 var tasks = clientRange.Select(i => Task.Run(()=>IterateAsync(iterations[i], clients[i], iterate)));
-                Task.WhenAll(tasks).Wait();
+                await Task.WhenAll(tasks);
             }
         }
 
-        private void IterateAsync(long iterations, HttpClient client, Action<HttpClient> iterate)
+        private async Task IterateAsync(long iterations, HttpClient client, Func<HttpClient, Task> iterate)
         {
             for (var i = 0; i < iterations; i++)
             {
                 try
                 {
-                    iterate(client);
+                    await iterate(client);
                 }
                 catch (Exception ex) when (StressConfig.Instance.FailDebugger)
                 {
@@ -61,6 +61,5 @@ namespace Stress.Framework
                 }
             }
         }
-
     }
 }

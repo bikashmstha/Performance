@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Net;
 using System.Runtime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -73,13 +74,8 @@ namespace StarterMvc
             }
 
             app.UseStaticFiles();
-
             app.UseIdentity();
-
-            app.UseWebSockets(new WebSocketOptions
-            {
-                ReplaceFeature = Boolean.Parse(Configuration["WebSocketOptions:ReplaceFeature"])
-            });
+            app.UseWebSockets();
 
             app.UseMvc(routes =>
             {
@@ -97,60 +93,64 @@ namespace StarterMvc
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("hosting.json", optional: true)
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
-            bool hostingInHttpSys = false;
-            bool useHttps = false;
-            try
-            {
-                if (config["server"].ToLower() != "httpsys")
-                {
-                    Console.WriteLine("Host is Kestrel");
-                    hostingInHttpSys = false;
-                }
-                else
-                {
-                    Console.WriteLine("Host is HttpSys");
-                    hostingInHttpSys = true;
-                }
-            }
-            catch //Ignore if the option is not provided.
-            {
-            }
 
-            try
+            // Use Kestrel if config key not provided.
+            var hostingInHttpSys = false;
+            if (config["server"]?.ToLower() == "httpsys")
             {
-                if (bool.Parse(config["SecurityOption:EnableHTTPS"]))
-                {
-                    useHttps = true;
-                    Console.WriteLine("Enabled HTTPS");
-                }
-            }
-            catch (Exception) //Ignore if the option is not provided.
-            {
+                hostingInHttpSys = true;
             }
 
             var hostBuilder = new WebHostBuilder();
             if (hostingInHttpSys)
             {
-                hostBuilder.UseHttpSys(options =>
-                {
-                    options.Authentication.AllowAnonymous = true;
-                });
+                Console.WriteLine("Host is HttpSys");
+                hostBuilder.UseHttpSys();
             }
             else
             {
-                hostBuilder.UseKestrel(options =>
-                 {
-                     //options.ThreadCount = 4;
-                     //options.NoDelay = true;
-                     //options.UseConnectionLogging();
-                     if (useHttps)
-                         options.UseHttps(_httpsCertFile, _httpsCertPwd);
-                 });
+                var urls = config["urls"];
+                Console.WriteLine("Host is Kestrel");
 
+                var useHttps = bool.Parse(config["SecurityOption:EnableHTTPS"]);
+                hostBuilder.UseKestrel(options =>
+                {
+                    // options.ThreadCount = 4;
+                    // listenOptions.NoDelay = true;
+                    // listenOptions.UseConnectionLogging();
+                    if (string.IsNullOrEmpty(urls))
+                    {
+                        options.Listen(
+                            IPAddress.Loopback,
+                            5000,
+                            listenOptions =>
+                            {
+                                if (useHttps)
+                                {
+                                    Console.WriteLine("Enabled HTTPS");
+                                    listenOptions.UseHttps(_httpsCertFile, _httpsCertPwd);
+                                }
+                            });
+                    }
+                    else
+                    {
+                        foreach (var url in urls.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            var endPoint = CreateIPEndPoint(url);
+                            options.Listen(
+                                endPoint,
+                                listenOptions =>
+                                {
+                                    if (url.StartsWith("https:", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        listenOptions.UseHttps(_httpsCertFile, _httpsCertPwd);
+                                    }
+                                });
+                        }
+                    }
+                });
             }
 
             var host = hostBuilder.UseConfiguration(config)
@@ -168,6 +168,23 @@ namespace StarterMvc
             }
 
             host.Run();
+        }
+
+        private static IPEndPoint CreateIPEndPoint(string url)
+        {
+            var uri = new Uri(url);
+
+            IPAddress ip;
+            if (string.Equals(uri.Host, "localhost", StringComparison.OrdinalIgnoreCase))
+            {
+                ip = IPAddress.Loopback;
+            }
+            else if (!IPAddress.TryParse(uri.Host, out ip))
+            {
+                ip = IPAddress.IPv6Any;
+            }
+
+            return new IPEndPoint(ip, uri.Port);
         }
     }
 }

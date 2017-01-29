@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Stress.Framework;
@@ -13,6 +12,7 @@ using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Stress
 {
+    [Collection("May share ports")]
     public class StarterMvcTests : StressTestBase
     {
         public static async Task StarterMvc_Warmup(HttpClient client)
@@ -27,69 +27,69 @@ namespace Microsoft.AspNetCore.Tests.Stress
         }
 
         [Stress("StarterMvc", WarmupMethodName = nameof(StarterMvc_Warmup))]
-        public void StarterMvc()
+        public Task StarterMvc()
         {
-            IterateAsync(client =>
+            return IterateAsync(async client =>
             {
-                var response = client.GetAsync("/").GetAwaiter().GetResult();
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
-                response = client.GetAsync("/Home/About").GetAwaiter().GetResult();
+                response = await client.GetAsync("/Home/About");
                 response.EnsureSuccessStatusCode();
-                response = client.GetAsync("/Home/Contact").GetAwaiter().GetResult();
+                response = await client.GetAsync("/Home/Contact");
                 response.EnsureSuccessStatusCode();
 
                 // Register
-                var getResponse = client.GetAsync("/Account/Register").GetAwaiter().GetResult();
+                var getResponse = await client.GetAsync("/Account/Register");
                 getResponse.EnsureSuccessStatusCode();
 
-                var responseContent = getResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var responseContent = await getResponse.Content.ReadAsStringAsync();
                 var verificationToken = ExtractVerificationToken(responseContent);
 
                 var testUser = GetUniqueUserId();
                 var requestContent = CreateRegisterPost(verificationToken, testUser, "Asd!123$$", "Asd!123$$");
 
-                var postResponse = client.PostAsync("/Account/Register", requestContent).GetAwaiter().GetResult();
+                var postResponse = await client.PostAsync("/Account/Register", requestContent);
                 postResponse.EnsureSuccessStatusCode();
 
-                var postResponseContent = postResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var postResponseContent = await postResponse.Content.ReadAsStringAsync();
                 Assert.Contains("Learn how to build ASP.NET apps that can run anywhere.", postResponseContent); // Home page
 
                 // Verify manage page
-                var manageResponse = client.GetAsync("/Manage").GetAwaiter().GetResult();
+                var manageResponse = await client.GetAsync("/Manage");
                 manageResponse.EnsureSuccessStatusCode();
 
-                var manageContent = manageResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var manageContent = await manageResponse.Content.ReadAsStringAsync();
                 verificationToken = ExtractVerificationToken(manageContent);
 
                 // Verify Logoff
                 var logoffRequestContent = CreateLogOffPost(verificationToken);
-                var logoffResponse = client.PostAsync("/Account/LogOff", logoffRequestContent).GetAwaiter().GetResult();
+                var logoffResponse = await client.PostAsync("/Account/LogOff", logoffRequestContent);
                 logoffResponse.EnsureSuccessStatusCode();
 
-                var logOffResponseContent = logoffResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var logOffResponseContent = await logoffResponse.Content.ReadAsStringAsync();
                 Assert.Contains("Learn how to build ASP.NET apps that can run anywhere.", postResponseContent); // Home page
 
                 // Verify relogin
-                var loginResponse = client.GetAsync("/Account/Login").GetAwaiter().GetResult();
+                var loginResponse = await client.GetAsync("/Account/Login");
                 loginResponse.EnsureSuccessStatusCode();
-                var loginResponseContent = loginResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var loginResponseContent = await loginResponse.Content.ReadAsStringAsync();
 
                 verificationToken = ExtractVerificationToken(responseContent);
                 var loginRequestContent = CreateLoginPost(verificationToken, testUser, "Asd!123$$");
 
-                var loginPostResponse = client.PostAsync("/Account/Login", loginRequestContent).GetAwaiter().GetResult();
+                var loginPostResponse = await client.PostAsync("/Account/Login", loginRequestContent);
                 loginPostResponse.EnsureSuccessStatusCode();
 
-                var longPostResponseContent = loginPostResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var longPostResponseContent = await loginPostResponse.Content.ReadAsStringAsync();
                 Assert.DoesNotContain("Invalid login attempt.", longPostResponseContent); // Errored Login page
 
                 // Logoff to get the HttpClient back into a working state.
-                manageResponse = client.GetAsync("/Manage").GetAwaiter().GetResult();
+                manageResponse = await client.GetAsync("/Manage");
                 manageResponse.EnsureSuccessStatusCode();
-                manageContent = manageResponse.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                manageContent = await manageResponse.Content.ReadAsStringAsync();
                 verificationToken = ExtractVerificationToken(manageContent);
                 logoffRequestContent = CreateLogOffPost(verificationToken);
-                logoffResponse = client.PostAsync("/Account/LogOff", logoffRequestContent).GetAwaiter().GetResult();
+                logoffResponse = await client.PostAsync("/Account/LogOff", logoffRequestContent);
                 logoffResponse.EnsureSuccessStatusCode();
             });
         }

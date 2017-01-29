@@ -16,8 +16,7 @@ namespace BasicViews
     {
         public Startup(IHostingEnvironment hosting)
         {
-            Configuration = 
-                new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -38,7 +37,7 @@ namespace BasicViews
         public void Configure(IApplicationBuilder app)
         {
             CreateDatabase(app.ApplicationServices);
-           
+
             app.Use(next => async (context) =>
             {
                 try
@@ -70,11 +69,10 @@ namespace BasicViews
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .Build();
-                
+
             var application = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://+:5000")

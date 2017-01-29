@@ -4,24 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.AspNetCore.Razor;
-using Microsoft.Extensions.DependencyModel;
-using System.Reflection;
-using System.Text;
 
 namespace RazorCodeGenerator
 {
@@ -141,13 +135,12 @@ namespace RazorCodeGenerator
 
             var services = ConfigureDefaultServices(basePath);
             ViewEngine = services.GetRequiredService<IRazorViewEngine>();
-            var host = (MvcRazorHost)services.GetRequiredService<IMvcRazorHost>();
-            TemplateEngine = new RazorTemplateEngine(host);
+            CompilationService = (RazorCompilationService)services.GetRequiredService<IRazorCompilationService>();
         }
 
         private string BasePath { get; }
 
-        private RazorTemplateEngine TemplateEngine { get; }
+        private RazorCompilationService CompilationService { get; }
 
         private IRazorViewEngine ViewEngine { get; }
 
@@ -166,7 +159,7 @@ namespace RazorCodeGenerator
 
             if (!nonInteractive)
             {
-                Console.WriteLine("Press the ANY key to start.");
+                Console.WriteLine("Press the ENTRY key to start.");
                 Console.ReadLine();
             }
 
@@ -185,7 +178,7 @@ namespace RazorCodeGenerator
 
             if (!nonInteractive)
             {
-                Console.WriteLine("Press the ANY key to exit.");
+                Console.WriteLine("Press the ENTRY key to exit.");
                 Console.ReadLine();
             }
 
@@ -227,7 +220,7 @@ namespace RazorCodeGenerator
                 for (var i = 0; i < sources.Count; i++)
                 {
                     var source = sources[i];
-                    
+                    var relativePath = source.Substring(BasePath.Length);
                     var fileNameNoExtension = Path.GetFileNameWithoutExtension(source);
 
                     Console.WriteLine($"Generating {source}");
@@ -236,16 +229,12 @@ namespace RazorCodeGenerator
                     {
                         for (var j = 0; j < iterations; j++)
                         {
-                            var result = TemplateEngine.GenerateCode(
-                                stream,
-                                className: fileNameNoExtension,
-                                rootNamespace: ManglePath(BasePath, Path.GetDirectoryName(source)),
-                                sourceFileName: source.Substring(BasePath.Length));
-
-                            if (!result.Success)
+                            var codeDocument = CompilationService.CreateCodeDocument(relativePath, stream);
+                            var result = CompilationService.ProcessCodeDocument(codeDocument);
+                            if (result.Diagnostics.Count > 0)
                             {
                                 Console.WriteLine($"Code generation failed for {source}");
-                                foreach (var error in result.ParserErrors)
+                                foreach (var error in result.GeneratedCode)
                                 {
                                     Console.WriteLine("\t" + error);
                                 }

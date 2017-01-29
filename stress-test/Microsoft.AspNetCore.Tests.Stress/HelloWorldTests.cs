@@ -4,33 +4,35 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Stress.Framework;
+using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Stress
 {
+    [Collection("May share ports")]
     public class HelloWorldTests : StressTestBase
     {
-        public static void HelloWorld_Warmup(HttpClient client)
+        public static async Task HelloWorld_Warmup(HttpClient client)
         {
-            var response = client.GetAsync("/").GetAwaiter().GetResult();
+            var response = await client.GetAsync("/");
             response.EnsureSuccessStatusCode();
         }
 
         [Stress("BasicKestrel", WarmupMethodName = nameof(HelloWorld_Warmup))]
-        public void Middleware_HelloWorld()
+        public Task Middleware_HelloWorld()
         {
-            IterateAsync(client =>
+            return IterateAsync(async client =>
             {
-                var response = client.GetAsync("/").GetAwaiter().GetResult();
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
             });
         }
 
         [Stress("HelloWorldMvc", WarmupMethodName = nameof(HelloWorld_Warmup))]
-        public void Mvc_HelloWorld()
+        public Task Mvc_HelloWorld()
         {
-            IterateAsync(client =>
+            return IterateAsync(async client =>
             {
-                var response = client.GetAsync("/").GetAwaiter().GetResult();
+                var response = await client.GetAsync("/");
                 response.EnsureSuccessStatusCode();
             });
         }

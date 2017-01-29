@@ -1,6 +1,0 @@
-﻿{
-  "SecurityOption": {
-    "EnableHTTPS": false
-  },
-  "server": "Kestrel"
-}

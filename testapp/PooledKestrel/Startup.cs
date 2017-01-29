@@ -1,10 +1,11 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Collections.Generic;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,8 +38,11 @@ namespace Microsoft.AspNetCore.Test.Perf.WebFx.Apps.LowAlloc
         public static void Main(string[] args)
         {
             _configuration = new ConfigurationBuilder()
-                .AddCommandLine(args)
-                .AddJsonFile("hosting.json", optional: true)
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
+                    { "hosting.maxPooledContexts", "256" },
+                })
+                // Ensure in-memory default does not override environment variables.
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();

@@ -3,18 +3,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Benchmarks.Framework;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Directives;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Razor;
-using Microsoft.AspNetCore.Razor.CodeGenerators;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
-using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
+using Microsoft.AspNetCore.Razor.Evolution;
+using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.ObjectPool;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Primitives;
 using Xunit;
+using SourceLocation = Microsoft.AspNetCore.Razor.SourceLocation;
+using TagHelperDescriptor = Microsoft.AspNetCore.Razor.Compilation.TagHelpers.TagHelperDescriptor;
+using TagHelperDescriptorResolver = Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperDescriptorResolver;
+using TagHelperDirectiveDescriptor = Microsoft.AspNetCore.Razor.Compilation.TagHelpers.TagHelperDirectiveDescriptor;
 
 namespace Microbenchmarks.Tests.Razor
 {
@@ -49,31 +60,54 @@ namespace Microbenchmarks.Tests.Razor
 
         [Benchmark]
         [BenchmarkVariation("Runtime", false)]
-        [BenchmarkVariation("Design Time", true)]
         public void ViewParsing(bool designTime)
         {
             // Arrange
-            var chunkTreeCache = new DefaultChunkTreeCache(new TestFileProvider());
-            var resolver = new TagHelperDescriptorResolver(designTime: false);
-            var razorHost = new MvcRazorHost(chunkTreeCache, resolver)
-            {
-                DesignTimeMode = designTime
-            };
+            var services = ConfigureDefaultServices(Environment.CurrentDirectory);
+            var compilationService = (RazorCompilationService)services.GetRequiredService<IRazorCompilationService>();
+
             var assembly = typeof(RazorTests).GetTypeInfo().Assembly;
             var assemblyName = assembly.GetName().Name;
             var stream = assembly.GetManifestResourceStream($"{assemblyName}.compiler.resources.RazorTests.TestFile.cshtml");
-            GeneratorResults result;
+
+            var codeDocument = compilationService.CreateCodeDocument("test.cshtml", stream);
+
+            RazorCSharpDocument result;
 
             // Act
             using (Collector.StartCollection())
             {
-                result = razorHost.GenerateCode("test/path", stream);
+                result = compilationService.ProcessCodeDocument(codeDocument);
             }
 
             // Assert
-            Assert.Empty(result.ErrorSink.Errors);
-            Assert.Empty(result.ParserErrors);
-            Assert.True(result.Success);
+            Assert.Empty(result.Diagnostics);
+        }
+
+        private static IServiceProvider ConfigureDefaultServices(string basePath)
+        {
+            var services = new ServiceCollection();
+
+            var applicationEnvironment = PlatformServices.Default.Application;
+            services.AddSingleton(PlatformServices.Default.Application);
+            services.AddSingleton<IHostingEnvironment>(new HostingEnvironment
+            {
+                ApplicationName = "Microbenchmarks.Tests",
+                WebRootFileProvider = new PhysicalFileProvider(basePath)
+            });
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.FileProviders.Clear();
+                options.FileProviders.Add(new PhysicalFileProvider(basePath));
+            });
+            var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
+            services.AddSingleton<DiagnosticSource>(diagnosticSource);
+            services.AddLogging();
+            services.AddMvc();
+
+            services.AddSingleton<ObjectPoolProvider>(new DefaultObjectPoolProvider());
+
+            return services.BuildServiceProvider();
         }
 
         private class TestFileProvider : IFileProvider

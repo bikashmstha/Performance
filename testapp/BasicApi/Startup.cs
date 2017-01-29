@@ -2,9 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using BasicApi.Models;
@@ -14,7 +12,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
@@ -25,8 +22,7 @@ namespace BasicApi
     {
         public Startup(IHostingEnvironment hosting)
         {
-            Configuration =
-                new ConfigurationBuilder()
+            Configuration = new ConfigurationBuilder()
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddJsonFile("appsettings.json")
                 .Build();
@@ -61,9 +57,9 @@ namespace BasicApi
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
-                    "pet-store-reader", 
+                    "pet-store-reader",
                     builder => builder
-                        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                         .RequireAuthenticatedUser()
                         .RequireClaim("scope", "pet-store-reader"));
 
@@ -80,7 +76,7 @@ namespace BasicApi
                 .AddAuthorization()
                 .AddJsonFormatters(json => json.ContractResolver = new CamelCasePropertyNamesContractResolver())
                 .AddDataAnnotations();
-            
+
             services.AddSingleton<PetRepository>(new PetRepository());
         }
 
@@ -128,13 +124,11 @@ namespace BasicApi
 
         public static void Main(string[] args)
         {
-            var configuration =
-                new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+            var configuration = new ConfigurationBuilder()
                 .AddCommandLine(args)
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .Build();
-                
+
             var application = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://+:5000")

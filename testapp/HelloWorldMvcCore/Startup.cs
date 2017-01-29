@@ -37,10 +37,9 @@ namespace HelloWorldMvcCore
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
-                
+
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://+:5000")

@@ -23,8 +23,6 @@ namespace HelloWorldMvc
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("hosting.json", optional: true)
-                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
 

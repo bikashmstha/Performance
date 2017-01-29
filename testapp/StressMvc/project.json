@@ -13,7 +13,6 @@
     "copyToOutput": {
       "include": [
         "appsettings.json",
-        "hosting.json",
         "stressmvc.pfx",
         "Views",
         "wwwroot"
@@ -59,7 +58,6 @@
     ],
     "include": [
       "appsettings.json",
-      "hosting.json",
       "stressmvc.pfx",
       "Views",
       "wwwroot"

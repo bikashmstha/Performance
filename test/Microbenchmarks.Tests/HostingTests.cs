@@ -27,7 +27,6 @@ namespace Microbenchmarks.Tests
             using (Collector.StartCollection())
             {
                 var config = new ConfigurationBuilder()
-                    .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                     .AddCommandLine(args)
                     .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                     .Build();
@@ -64,7 +63,6 @@ namespace Microbenchmarks.Tests
             public static void Main(string[] args)
             {
                 var config = new ConfigurationBuilder()
-                    .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                     .AddCommandLine(args)
                     .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                     .Build();

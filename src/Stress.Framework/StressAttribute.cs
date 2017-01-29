@@ -14,7 +14,7 @@ namespace Stress.Framework
         public StressAttribute(string testApplicationName, params ServerType[] servers)
         {
             TestApplicationName = testApplicationName;
-            Servers = servers.Any() ? servers : new ServerType[] { ServerType.IIS, ServerType.Kestrel };
+            Servers = servers.Any() ? servers : new ServerType[] { ServerType.Kestrel };
         }
 
         public long Iterations { get; set; } = StressConfig.Instance.Iterations;

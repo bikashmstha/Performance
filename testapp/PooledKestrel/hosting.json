@@ -1,5 +1,0 @@
-﻿{
-  "hosting.maxPooledContexts": 256,
-  "kestrel.maxPooledStreams": 256,
-  "kestrel.maxPooledHeaders": 256
-}
