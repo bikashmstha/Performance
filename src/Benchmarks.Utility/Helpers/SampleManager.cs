@@ -2,9 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.PlatformAbstractions;
 
@@ -116,22 +116,25 @@ namespace Benchmarks.Utility.Helpers
                 var target = Path.Combine(tempFolder, Name);
                 Directory.CreateDirectory(target);
 
-                string copyCommand, copySampleParameters, copyNugetConfigParameters;
+                string copyCommand, copySampleParameters, copyNugetConfigParameters, copyGlobalJsonParameters;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     copyCommand = "robocopy";
                     copySampleParameters = $"\"{SourcePath}\" \"{target}\" /E /S /XD node_modules /XF project.lock.json";
                     copyNugetConfigParameters = $"\"{_pathToNugetConfig}\" \"{target}\" NuGet.config";
+                    copyGlobalJsonParameters = $"\"{_pathToNugetConfig}\" \"{target}\" global.json";
                 }
                 else
                 {
                     copyCommand = "rsync";
                     copySampleParameters = $"--recursive --exclude=node_modules --exclude=project.lock.json \"{SourcePath}/\" \"{target}/\"";
                     copyNugetConfigParameters = $"\"{_pathToNugetConfig}/NuGet.config\" \"{target}/NuGet.config\"";
+                    copyGlobalJsonParameters = $"\"{_pathToNugetConfig}/global.json\" \"{target}/global.json\"";
                 }
                 var runner = new CommandLineRunner(copyCommand);
                 runner.Execute(copySampleParameters);
                 runner.Execute(copyNugetConfigParameters);
+                runner.Execute(copyGlobalJsonParameters);
                 if (!DotnetHelper.GetDefaultInstance().Restore(target, quiet: true))
                 {
                     Directory.Delete(target, recursive: true);
