@@ -27,10 +27,10 @@ A simple test app built based StartMvc app but without depending on SQL, securit
 dotnet run server.urls=http://*5000 --configuration release
 ```
 
-* By default it uses `Kestrel` as hosting server. To use WebListener, run as:
+* By default it uses `Kestrel` as hosting server. To use HttpSys, run as:
 
 ```
-dotnet run --server WebListener --configuration release
+dotnet run --server HttpSys --configuration release
 ```
 
 * If using other http server as reverse proxy, you may need to update configuration to allow large content to be sent by client

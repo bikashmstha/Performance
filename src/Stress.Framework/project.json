@@ -1,21 +1,21 @@
 {
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "dependencies": {
-    "Benchmarks.Utility": "1.1.0-*",
+    "Benchmarks.Utility": "1.2.0-*",
     "Microsoft.AspNetCore.Server.Testing": "0.2.0-*",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.Json": "1.1.0-*",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.Json": "1.2.0-*",
     "Microsoft.Extensions.RuntimeEnvironment.Sources": {
-      "version": "1.1.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     },
-    "NETStandard.Library": "1.6.1-*"
+    "NETStandard.Library": "1.6.2-*"
   },
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.2.0-*",
           "type": "platform"
         }
       },

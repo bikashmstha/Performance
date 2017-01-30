@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "buildOptions": {
     "copyToOutput": {
       "include": [
@@ -13,26 +13,26 @@
     ]
   },
   "dependencies": {
-    "Benchmarks.Utility": "1.1.0-*",
+    "Benchmarks.Utility": "1.2.0-*",
     "dotnet-test-xunit": "2.2.0-*",
     "Microsoft.DotNet.InternalAbstractions": "1.0.0",
-    "Microsoft.Extensions.Configuration": "1.1.0-*",
-    "Microsoft.Extensions.Logging": "1.1.0-*",
-    "Microsoft.Extensions.Logging.Console": "1.1.0-*",
+    "Microsoft.Extensions.Configuration": "1.2.0-*",
+    "Microsoft.Extensions.Logging": "1.2.0-*",
+    "Microsoft.Extensions.Logging.Console": "1.2.0-*",
     "Microsoft.Extensions.Process.Sources": {
       "type": "build",
-      "version": "1.1.0-*"
+      "version": "1.2.0-*"
     },
     "Microsoft.Extensions.RuntimeEnvironment.Sources": {
-      "version": "1.1.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     }
   },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.2.0-*",
           "type": "platform"
         }
       },

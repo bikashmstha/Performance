@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "buildOptions": {
     "preserveCompilationContext": true,
     "compile": {
@@ -31,29 +31,29 @@
     }
   },
   "dependencies": {
-    "BasicApi": "1.1.0-*",
-    "BasicViews": "1.1.0-*",
-    "Benchmarks.Utility": "1.1.0-*",
-    "BigModelBinding": "1.1.0-*",
-    "BigViews": "1.1.0-*",
+    "BasicApi": "1.2.0-*",
+    "BasicViews": "1.2.0-*",
+    "Benchmarks.Utility": "1.2.0-*",
+    "BigModelBinding": "1.2.0-*",
+    "BigViews": "1.2.0-*",
     "dotnet-test-xunit": "2.2.0-*",
-    "LargeStaticView": "1.1.0-*",
-    "LocalizedViews": "1.1.0-*",
-    "Microsoft.AspNetCore.TestHost": "1.1.0-*",
-    "Microsoft.AspNetCore.Testing": "1.1.0-*",
+    "LargeStaticView": "1.2.0-*",
+    "LocalizedViews": "1.2.0-*",
+    "Microsoft.AspNetCore.TestHost": "1.2.0-*",
+    "Microsoft.AspNetCore.Testing": "1.2.0-*",
     "Microsoft.DotNet.InternalAbstractions": "1.0.0",
-    "Microsoft.Extensions.Configuration": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.Json": "1.1.0-*",
-    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0-*",
-    "MusicStoreViews": "1.1.0-*",
-    "RazorCodeGenerator": "1.1.0-*"
+    "Microsoft.Extensions.Configuration": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.Json": "1.2.0-*",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.2.0-*",
+    "MusicStoreViews": "1.2.0-*",
+    "RazorCodeGenerator": "1.2.0-*"
   },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.2.0-*",
           "type": "platform"
         }
       },
