@@ -21,13 +21,11 @@ namespace MvcBenchmarks.InMemory
         static LocalizedViewsTest()
         {
             var builder = new WebHostBuilder();
-            builder.UseStartup<LocalizedViews.Startup>();
-            builder.UseProjectOf<LocalizedViews.Startup>();
             Server = new TestServer(builder);
             Client = Server.CreateClient();
         }
 
-        [Fact]
+        [Fact(Skip = "https://github.com/dotnet/core-setup/issues/1221")]
         public async Task LocalizedViews_HtmlHelpers()
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "/");
@@ -38,7 +36,7 @@ namespace MvcBenchmarks.InMemory
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        [Fact]
+        [Fact(Skip = "https://github.com/dotnet/core-setup/issues/1221")]
         public async Task LocalizedViews_TagHelpers()
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "/TagHelpers");

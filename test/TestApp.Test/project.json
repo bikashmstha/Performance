@@ -38,7 +38,6 @@
     "BigViews": "1.2.0-*",
     "dotnet-test-xunit": "2.2.0-*",
     "LargeStaticView": "1.2.0-*",
-    "LocalizedViews": "1.2.0-*",
     "Microsoft.AspNetCore.TestHost": "1.2.0-*",
     "Microsoft.AspNetCore.Testing": "1.2.0-*",
     "Microsoft.DotNet.InternalAbstractions": "1.0.0",
