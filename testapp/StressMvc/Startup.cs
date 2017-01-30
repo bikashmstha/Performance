@@ -5,6 +5,7 @@ using System;
 using System.Runtime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -76,10 +77,15 @@ namespace StarterMvc
 
             app.UseIdentity();
 
-            app.UseWebSockets(new WebSocketOptions
+            if (bool.Parse(Configuration["WebSocketOptions:ReplaceFeature"]))
             {
-                ReplaceFeature = Boolean.Parse(Configuration["WebSocketOptions:ReplaceFeature"])
-            });
+                app.Use((context, next) =>
+                {
+                    context.Features.Set<IHttpWebSocketFeature>(null);
+                    return next();
+                });
+            }
+            app.UseWebSockets();
 
             app.UseMvc(routes =>
             {
@@ -91,7 +97,7 @@ namespace StarterMvc
                     template: "{controller}/{id?}");
             });
 
-            TextContentRelayController.UseSingletonClient = Boolean.Parse(Configuration["TextContentRelayControllerOptions:UseSingletonClient"]);
+            TextContentRelayController.UseSingletonClient = bool.Parse(Configuration["TextContentRelayControllerOptions:UseSingletonClient"]);
         }
 
         public static void Main(string[] args)
@@ -143,14 +149,17 @@ namespace StarterMvc
             else
             {
                 hostBuilder.UseKestrel(options =>
-                 {
-                     //options.ThreadCount = 4;
-                     //options.NoDelay = true;
-                     //options.UseConnectionLogging();
-                     if (useHttps)
-                         options.UseHttps(_httpsCertFile, _httpsCertPwd);
-                 });
-
+                {
+                    // options.ThreadCount = 4;
+                    // listenOptions.NoDelay = true;
+                    // listenOptions.UseConnectionLogging();
+                    if (useHttps)
+                    {
+                        options.Listen(
+                            endPoint: null,
+                            configure: listenOptions => listenOptions.UseHttps(_httpsCertFile, _httpsCertPwd));
+                    }
+                });
             }
 
             var host = hostBuilder.UseConfiguration(config)

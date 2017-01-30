@@ -4,8 +4,6 @@
 using Benchmarks.Framework.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.AspNetCore.Server.Kestrel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -58,7 +56,7 @@ namespace PerformanceDashboard
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
@@ -71,12 +69,18 @@ namespace PerformanceDashboard
 
         public static void Main(string[] args)
         {
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("hosting.json", optional: true)
+                .AddEnvironmentVariables(prefix: "ASPNETCORE_")
+                .AddCommandLine(args)
+                .Build();
             var host = new WebHostBuilder()
-                .UseDefaultHostingConfiguration(args)
+                .UseConfiguration(config)
                 .UseIISIntegration()
                 .UseStartup<Startup>()
-                .UseServer(new ServerFactory(new ApplicationLifetime(), new LoggerFactory()))
+                .UseKestrel()
                 .Build();
+
             host.Run();
         }
     }

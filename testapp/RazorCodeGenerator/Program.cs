@@ -4,24 +4,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Razor;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.AspNetCore.Razor;
-using Microsoft.Extensions.DependencyModel;
-using System.Reflection;
-using System.Text;
 
 namespace RazorCodeGenerator
 {
@@ -166,7 +159,7 @@ namespace RazorCodeGenerator
 
             if (!nonInteractive)
             {
-                Console.WriteLine("Press the ANY key to start.");
+                Console.WriteLine("Press the ENTRY key to start.");
                 Console.ReadLine();
             }
 
@@ -185,7 +178,7 @@ namespace RazorCodeGenerator
 
             if (!nonInteractive)
             {
-                Console.WriteLine("Press the ANY key to exit.");
+                Console.WriteLine("Press the ENTRY key to exit.");
                 Console.ReadLine();
             }
 
@@ -227,7 +220,7 @@ namespace RazorCodeGenerator
                 for (var i = 0; i < sources.Count; i++)
                 {
                     var source = sources[i];
-                    
+
                     var fileNameNoExtension = Path.GetFileNameWithoutExtension(source);
 
                     Console.WriteLine($"Generating {source}");
