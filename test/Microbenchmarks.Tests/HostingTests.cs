@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using Benchmarks.Framework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,7 +19,7 @@ namespace Microbenchmarks.Tests
         [OSSkipCondition(OperatingSystems.Linux)]
         [Benchmark]
         [BenchmarkVariation("Kestrel", "Microsoft.AspNetCore.Server.Kestrel")]
-        [BenchmarkVariation("WebListener", "Microsoft.AspNetCore.Server.WebListener")]
+        [BenchmarkVariation("HttpSys", "Microsoft.AspNetCore.Server.HttpSys")]
         public void MainToConfigureOverhead(string variationServer)
         {
             var args = new[] { "--server", variationServer, "--captureStartupErrors", "true" };
@@ -32,7 +31,7 @@ namespace Microbenchmarks.Tests
                     .AddCommandLine(args)
                     .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                     .Build();
-                
+
                 var builder = new WebHostBuilder()
                     .UseConfiguration(config)
                     .UseKestrel()
@@ -69,7 +68,7 @@ namespace Microbenchmarks.Tests
                     .AddCommandLine(args)
                     .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                     .Build();
-                    
+
                 var host = new WebHostBuilder()
                     .UseConfiguration(config)
                     .UseStartup<TestStartup>()
@@ -84,7 +83,7 @@ namespace Microbenchmarks.Tests
             public TestServer()
             {
             }
-        
+
             public void Dispose()
             {
             }

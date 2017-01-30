@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "buildOptions": {
     "emitEntryPoint": true,
     "compile": {
@@ -7,30 +7,23 @@
     }
   },
   "dependencies": {
-    "Microsoft.Extensions.CommandLineUtils": "1.1.0-*",
+    "Microsoft.Extensions.CommandLineUtils": "1.2.0-*",
     "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.0-*"
+          "version": "1.2.0-*"
         }
-      },
-      "imports": [
-        "dnxcore50",
-        "portable-net451+win8"
-      ]
+      }
     },
     "net451": {
       "frameworkAssemblies": {
         "System.Net.Http": ""
       }
     }
-  },
-  "commands": {
-    "run": "LargeJsonApiClient"
   },
   "runtimeOptions": {
     "configProperties": {

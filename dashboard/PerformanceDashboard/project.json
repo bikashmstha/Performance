@@ -1,66 +1,57 @@
 {
-  "userSecretsId": "aspnet5-PerformanceDashboard-06b64eaf-0d24-4465-ad57-c9d7a5c5a511",
-  "version": "1.1.0-*",
   "buildOptions": {
+    "compile": {
+      "exclude": [
+        "wwwroot",
+        "node_modules"
+      ],
+      "include": "../../src/Benchmarks.Framework/Model/*.cs"
+    },
+    "copyToOutput": {
+      "exclude": "bin/**;obj/**;*.kproj",
+      "include": "**/*"
+    },
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Diagnostics": "1.1.0-*",
-    "Microsoft.AspNetCore.Hosting": "1.1.0-*",
-    "Microsoft.AspNetCore.Mvc": "1.1.0-*",
+    "Microsoft.AspNetCore.Diagnostics": "1.2.0-*",
+    "Microsoft.AspNetCore.Hosting": "1.2.0-*",
+    "Microsoft.AspNetCore.Mvc": "1.2.0-*",
     "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     },
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0-*",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.1.0-*",
-    "Microsoft.AspNetCore.StaticFiles": "1.1.0-*",
-    "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.FileExtensions": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.Json": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.UserSecrets": "1.1.0-*",
-    "Microsoft.Extensions.Logging": "1.1.0-*",
-    "Microsoft.Extensions.Logging.Console": "1.1.0-*",
-    "Microsoft.Extensions.Logging.Debug": "1.1.0-*",
-    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-*"
-  },
-  "compile": "..\\..\\src\\Benchmarks.Framework\\Model\\*.cs",
-  "content": "**/*",
-  "contentExclude": "bin/**;obj/**;*.kproj",
-  "commands": {
-    "web": "PerformanceDashboard"
+    "Microsoft.AspNetCore.Server.IISIntegration": "1.2.0-*",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.2.0-*",
+    "Microsoft.AspNetCore.StaticFiles": "1.2.0-*",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.CommandLine": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.Json": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.UserSecrets": "1.2.0-*",
+    "Microsoft.Extensions.Logging": "1.2.0-*",
+    "Microsoft.Extensions.Logging.Console": "1.2.0-*",
+    "Microsoft.Extensions.Logging.Debug": "1.2.0-*",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.1.0-*"
   },
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dnxcore50",
-        "portable-dnxcore50+net45+win8+wp8+wpa81",
-        "portable-net451+win8"
-      ],
+    "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.2.0-*",
           "type": "platform"
         }
       }
     }
   },
-  "tools": {
-    "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-*",
-      "imports": [ "portable-net45+win8+dnxcore50" ]
-    }
+  "publishOptions": {
+    "exclude": [
+      "**.user",
+      "**.vspscc",
+      "global.json"
+    ]
   },
-  "exclude": [
-    "wwwroot",
-    "node_modules"
-  ],
-  "publishExclude": [
-    "**.user",
-    "**.vspscc",
-    "global.json"
-  ],
   "scripts": {
     "prepublish": [
       "npm install",
@@ -68,5 +59,12 @@
       "gulp clean",
       "gulp min"
     ]
-  }
+  },
+  "tools": {
+    "Microsoft.AspNetCore.Razor.Tools": {
+      "version": "1.2.0-*"
+    }
+  },
+  "userSecretsId": "aspnet5-PerformanceDashboard-06b64eaf-0d24-4465-ad57-c9d7a5c5a511",
+  "version": "1.2.0-*"
 }

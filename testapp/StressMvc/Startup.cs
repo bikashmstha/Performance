@@ -41,7 +41,7 @@ namespace StarterMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.            
+            // Add framework services.
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
             services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -101,19 +101,19 @@ namespace StarterMvc
                 .AddEnvironmentVariables(prefix: "ASPNETCORE_")
                 .AddCommandLine(args)
                 .Build();
-            bool hostingInWebListener = false;
+            bool hostingInHttpSys = false;
             bool useHttps = false;
             try
             {
-                if (config["server"].ToLower() != "weblistener")
+                if (config["server"].ToLower() != "httpsys")
                 {
                     Console.WriteLine("Host is Kestrel");
-                    hostingInWebListener = false;
+                    hostingInHttpSys = false;
                 }
                 else
                 {
-                    Console.WriteLine("Host is WebListener");
-                    hostingInWebListener = true;
+                    Console.WriteLine("Host is HttpSys");
+                    hostingInHttpSys = true;
                 }
             }
             catch //Ignore if the option is not provided.
@@ -133,11 +133,11 @@ namespace StarterMvc
             }
 
             var hostBuilder = new WebHostBuilder();
-            if (hostingInWebListener)
+            if (hostingInHttpSys)
             {
-                hostBuilder.UseWebListener(options =>
+                hostBuilder.UseHttpSys(options =>
                 {
-                    options.ListenerSettings.Authentication.AllowAnonymous = true;
+                    options.Authentication.AllowAnonymous = true;
                 });
             }
             else
@@ -152,6 +152,7 @@ namespace StarterMvc
                  });
 
             }
+
             var host = hostBuilder.UseConfiguration(config)
                 .UseIISIntegration()
                 .UseStartup<Startup>()
@@ -165,6 +166,7 @@ namespace StarterMvc
             {
                 Console.WriteLine("Workstation GC");
             }
+
             host.Run();
         }
     }

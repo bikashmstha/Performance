@@ -4,8 +4,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Linq;
+using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Benchmarks.Framework;
 using Benchmarks.Utility.Helpers;
@@ -13,7 +14,6 @@ using Benchmarks.Utility.Logging;
 using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using Xunit;
-using System.Threading;
 
 namespace Microsoft.AspNetCore.Tests.Performance
 {
@@ -176,7 +176,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
             RunStartup(5000, logger, testAppStartInfo);
         }
-        
+
         private ProcessStartInfo GetStartInfo(string testProject, string sampleName)
         {
             string processPath = Path.Combine(testProject, $"{sampleName}.exe");
@@ -204,7 +204,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
             }
             if (string.Equals(runtimeType, "coreclr", StringComparison.OrdinalIgnoreCase))
             {
-                return "netcoreapp1.0";
+                return "netcoreapp1.1";
             }
             Assert.False(true, $"Unknown framework {runtimeType}");
             return null;

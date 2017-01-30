@@ -1,27 +1,20 @@
 {
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "buildOptions": {
     "emitEntryPoint": true
   },
   "frameworks": {
     "netcoreapp1.5": {
-      "imports": [
-        "dnxcore50",
-        "portable-net451+win8"
-      ],
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.2.0-*",
           "type": "platform"
         }
       }
     }
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Mvc": "1.1.0-*",
-    "Microsoft.Extensions.CommandLineUtils": "1.1.0-*"
-  },
-  "commands": {
-    "run": "MultipartPOSTClient"
+    "Microsoft.AspNetCore.Mvc": "1.2.0-*",
+    "Microsoft.Extensions.CommandLineUtils": "1.2.0-*"
   }
 }

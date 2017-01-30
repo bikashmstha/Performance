@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0-*",
+  "version": "1.2.0-*",
   "buildOptions": {
     "emitEntryPoint": true,
     "warningsAsErrors": true,
@@ -19,26 +19,26 @@
     }
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Mvc": "1.1.0-*",
+    "Microsoft.AspNetCore.Mvc": "1.2.0-*",
     "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     },
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0-*",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.1.0-*",
-    "Microsoft.AspNetCore.Server.WebListener": "1.1.0-*",
-    "Microsoft.AspNetCore.StaticFiles": "1.1.0-*",
-    "Microsoft.EntityFrameworkCore.InMemory": "1.1.0-*",
-    "Microsoft.EntityFrameworkCore.SqlServer": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.CommandLine": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0-*",
-    "Microsoft.Extensions.Configuration.Json": "1.1.0-*"
+    "Microsoft.AspNetCore.Server.HttpSys": "1.2.0-*",
+    "Microsoft.AspNetCore.Server.IISIntegration": "1.2.0-*",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.2.0-*",
+    "Microsoft.AspNetCore.StaticFiles": "1.2.0-*",
+    "Microsoft.EntityFrameworkCore.InMemory": "1.2.0-*",
+    "Microsoft.EntityFrameworkCore.SqlServer": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.CommandLine": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.2.0-*",
+    "Microsoft.Extensions.Configuration.Json": "1.2.0-*"
   },
   "frameworks": {
     "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.1.0-*",
+          "version": "1.2.0-*",
           "type": "platform"
         }
       }
@@ -46,15 +46,13 @@
     "net451": {}
   },
   "tools": {
-    "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.0.0-*",
-      "imports": [ "portable-net45+win8+dnxcore50" ]
-    }
+    "Microsoft.AspNetCore.Razor.Tools": "1.2.0-*"
   },
   "publishOptions": {
     "include": [
-        "**/*.cshtml",
-        "appsettings.json"
+      "**/*.cshtml",
+      "Views",
+      "appsettings.json"
     ],
     "exclude": [
       "node_modules",
@@ -62,10 +60,6 @@
       "**.xproj",
       "**.user",
       "**.vspscc"
-    ],
-    "include": [
-      "Views",
-      "appsettings.json"
     ]
   },
   "runtimeOptions": {
