@@ -9,6 +9,8 @@ using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor.Compilation;
+using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
@@ -134,13 +136,12 @@ namespace RazorCodeGenerator
 
             var services = ConfigureDefaultServices(basePath);
             ViewEngine = services.GetRequiredService<IRazorViewEngine>();
-            var host = (MvcRazorHost)services.GetRequiredService<IMvcRazorHost>();
-            TemplateEngine = new RazorTemplateEngine(host);
+            CompilationService = (RazorCompilationService)services.GetRequiredService<IRazorCompilationService>();
         }
 
         private string BasePath { get; }
 
-        private RazorTemplateEngine TemplateEngine { get; }
+        private RazorCompilationService CompilationService { get; }
 
         private IRazorViewEngine ViewEngine { get; }
 
@@ -220,7 +221,7 @@ namespace RazorCodeGenerator
                 for (var i = 0; i < sources.Count; i++)
                 {
                     var source = sources[i];
-
+                    var relativePath = source.Substring(BasePath.Length);
                     var fileNameNoExtension = Path.GetFileNameWithoutExtension(source);
 
                     Console.WriteLine($"Generating {source}");
@@ -229,16 +230,12 @@ namespace RazorCodeGenerator
                     {
                         for (var j = 0; j < iterations; j++)
                         {
-                            var result = TemplateEngine.GenerateCode(
-                                stream,
-                                className: fileNameNoExtension,
-                                rootNamespace: ManglePath(BasePath, Path.GetDirectoryName(source)),
-                                sourceFileName: source.Substring(BasePath.Length));
-
-                            if (!result.Success)
+                            var codeDocument = CompilationService.CreateCodeDocument(relativePath, stream);
+                            var result = CompilationService.ProcessCodeDocument(codeDocument);
+                            if (result.Diagnostics.Count > 0)
                             {
                                 Console.WriteLine($"Code generation failed for {source}");
-                                foreach (var error in result.ParserErrors)
+                                foreach (var error in result.GeneratedCode)
                                 {
                                     Console.WriteLine("\t" + error);
                                 }
