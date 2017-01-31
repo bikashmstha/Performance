@@ -46,10 +46,7 @@
     "net451": {}
   },
   "tools": {
-    "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.2.0-*",
-      "imports": [ "portable-net45+win8+dnxcore50" ]
-    }
+    "Microsoft.AspNetCore.Razor.Tools": "1.2.0-*"
   },
   "publishOptions": {
     "include": [

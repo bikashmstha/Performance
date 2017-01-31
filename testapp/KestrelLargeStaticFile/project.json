@@ -5,11 +5,6 @@
   },
   "frameworks": {
     "netcoreapp1.1": {
-      "imports": [
-        "dnxcore50",
-        "portable-net451+win8",
-        "netstandardapp1.5"
-      ],
       "dependencies": {
         "Microsoft.NETCore.App": {
           "version": "1.2.0-*",

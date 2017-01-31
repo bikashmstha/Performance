@@ -18,10 +18,6 @@
   },
   "frameworks": {
     "netcoreapp1.1": {
-      "imports": [
-        "dnxcore50",
-        "portable-net451+win8"
-      ],
       "dependencies": {
         "Microsoft.NETCore.App": {
           "version": "1.2.0-*",
@@ -44,10 +40,7 @@
     "Microsoft.Extensions.Configuration.Json": "1.2.0-*"
   },
   "tools": {
-    "Microsoft.AspNetCore.Razor.Tools": {
-      "version": "1.2.0-*",
-      "imports":["portable-net45+win8+dnxcore50"]
-    }
+    "Microsoft.AspNetCore.Razor.Tools": "1.2.0-*"
    },
   "commands": {
     "web": "HelloWorldMvc"

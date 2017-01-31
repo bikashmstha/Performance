@@ -20,12 +20,7 @@
           "version": "1.2.0-*",
           "type": "platform"
         }
-      },
-      "imports": [
-        "dnxcore50",
-        "portable-net451+win8",
-        "netstandardapp1.5"
-      ]
+      }
     },
     "net451": {}
   }
