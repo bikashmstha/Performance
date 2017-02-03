@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 
@@ -20,10 +19,10 @@ namespace BasicApi
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hosting)
+        public Startup(IHostingEnvironment env)
         {
             Configuration = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
+                .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json")
                 .Build();
         }
@@ -80,9 +79,9 @@ namespace BasicApi
             services.AddSingleton<PetRepository>(new PetRepository());
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment hosting)
         {
-            CreateDatabase(app.ApplicationServices);
+            CreateDatabase(app.ApplicationServices, hosting.ContentRootPath);
 
             app.Use(next => async context =>
             {
@@ -102,7 +101,7 @@ namespace BasicApi
             app.UseMvc();
         }
 
-        private void CreateDatabase(IServiceProvider services)
+        private void CreateDatabase(IServiceProvider services, string contentRoot)
         {
             using (var serviceScope = services.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
@@ -116,7 +115,7 @@ namespace BasicApi
                     connection.Open();
 
                     var command = connection.CreateCommand();
-                    command.CommandText = File.ReadAllText(Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "seed.sql"));
+                    command.CommandText = File.ReadAllText(Path.Combine(contentRoot, "seed.sql"));
                     command.ExecuteNonQuery();
                 }
             }
@@ -126,13 +125,13 @@ namespace BasicApi
         {
             var configuration = new ConfigurationBuilder()
                 .AddCommandLine(args)
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .Build();
 
             var application = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://+:5000")
                 .UseConfiguration(configuration)
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
 
@@ -140,4 +139,3 @@ namespace BasicApi
         }
     }
 }
-

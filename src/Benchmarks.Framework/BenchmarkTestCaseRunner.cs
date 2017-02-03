@@ -1,17 +1,19 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Benchmarks.Framework.BenchmarkPersistence;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Benchmarks.Framework.BenchmarkPersistence;
+#if !NET451
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.PlatformAbstractions;
+#endif
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using XunitDiagnosticMessage = Xunit.DiagnosticMessage;
 
 namespace Benchmarks.Framework
 {
@@ -83,13 +85,13 @@ namespace Benchmarks.Framework
             if (runSummary.Failed != 0)
             {
                 _diagnosticMessageSink.OnMessage(
-                    new XunitDiagnosticMessage($"No valid results for {TestCase.DisplayName}. {runSummary.Failed} of {TestCase.Iterations + TestCase.WarmupIterations} iterations failed."));
+                    new DiagnosticMessage($"No valid results for {TestCase.DisplayName}. {runSummary.Failed} of {TestCase.Iterations + TestCase.WarmupIterations} iterations failed."));
             }
             else
             {
                 runSummary.PopulateMetrics();
-                _diagnosticMessageSink.OnMessage(new XunitDiagnosticMessage(runSummary.ToString()));
-                
+                _diagnosticMessageSink.OnMessage(new DiagnosticMessage(runSummary.ToString()));
+
                 try
                 {
                     BenchmarkResultProcessor.SaveSummary(runSummary);
@@ -97,7 +99,7 @@ namespace Benchmarks.Framework
                 catch (Exception ex)
                 {
                     _diagnosticMessageSink.OnMessage(
-                        new XunitDiagnosticMessage($"Failed to save results {Environment.NewLine} {ex}"));
+                        new DiagnosticMessage($"Failed to save results {Environment.NewLine} {ex}"));
                     throw;
                 }
             }
@@ -131,15 +133,15 @@ namespace Benchmarks.Framework
 
         private static string GetMachineName()
         {
-#if NETSTANDARDAPP1_5
+#if NET451
+            return Environment.MachineName;
+#else
             var config = new ConfigurationBuilder()
-                .SetBasePath(".")
+                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddEnvironmentVariables()
                 .Build();
 
             return config["computerName"];
-#else
-            return Environment.MachineName;
 #endif
         }
 

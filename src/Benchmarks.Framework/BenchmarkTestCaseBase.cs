@@ -1,13 +1,15 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Testing.xunit;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using Microsoft.AspNetCore.Testing.xunit;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using NullMessageSink = Xunit.Sdk.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 
 namespace Benchmarks.Framework
@@ -16,6 +18,15 @@ namespace Benchmarks.Framework
     {
         private static readonly string IMetricCollectorTypeInfoName =
             new ReflectionTypeInfo(typeof(IMetricCollector)).Name;
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
+        protected BenchmarkTestCaseBase()
+        {
+            // No way for us to get access to the message sink on the execution de-serialization path.
+            // Fortunately, have reported errors during discovery.
+            DiagnosticMessageSink = new NullMessageSink();
+        }
 
         public BenchmarkTestCaseBase(
             string variation,
@@ -55,9 +66,28 @@ namespace Benchmarks.Framework
         }
 
         protected IMessageSink DiagnosticMessageSink { get; }
+
         public abstract IMetricCollector MetricCollector { get; }
+
         public string TestMethodName { get; protected set; }
+
         public string Variation { get; protected set; }
+
+        public override void Deserialize(IXunitSerializationInfo info)
+        {
+            base.Deserialize(info);
+
+            TestMethodName = info.GetValue<string>(nameof(TestMethodName));
+            Variation = info.GetValue<string>(nameof(Variation));
+        }
+
+        public override void Serialize(IXunitSerializationInfo info)
+        {
+            base.Serialize(info);
+
+            info.AddValue(nameof(TestMethodName), TestMethodName);
+            info.AddValue(nameof(Variation), Variation);
+        }
 
         protected override string GetSkipReason(IAttributeInfo factAttribute) => EvaluateSkipConditions(TestMethod) ?? base.GetSkipReason(factAttribute);
 

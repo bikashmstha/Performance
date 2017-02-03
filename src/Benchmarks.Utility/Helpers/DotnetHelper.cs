@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -36,7 +35,7 @@ namespace Benchmarks.Utility.Helpers
             var dotnet = GetDotnetExecutable();
             var psi = new ProcessStartInfo(dotnet)
             {
-                Arguments = "restore --infer-runtimes" + (quiet ? " --verbosity Error" : ""),
+                Arguments = "restore" + (quiet ? " --verbosity minimal" : string.Empty),
                 WorkingDirectory = workingDir,
                 UseShellExecute = useShellExecute
             };
@@ -102,17 +101,6 @@ namespace Benchmarks.Utility.Helpers
                 return Path.Combine(dotnetPath, _dotnetAppName);
             }
             return _dotnetAppName;
-        }
-
-        public string BuildGlobalJson()
-        {
-            return JsonConvert.SerializeObject(new
-            {
-                projects = new[]
-                {
-                    "."
-                }
-            });
         }
     }
 }

@@ -1,9 +1,11 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Testing;
+using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -11,6 +13,12 @@ namespace Stress.Framework
 {
     public class StressTestCase : StressTestCaseBase
     {
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
+        public StressTestCase()
+        {
+        }
+
         public StressTestCase(
             string testApplicationName,
             long iterations,
@@ -30,15 +38,13 @@ namespace Stress.Framework
             testMethod,
             testMethodArguments)
         {
-            Iterations = iterations;
             Clients = clients;
-            MetricCollector = new StressMetricCollector();
-            MetricReporter = new TimedMetricReporter();
+            Iterations = iterations;
         }
 
-        public override IStressMetricCollector MetricCollector { get; protected set; }
+        public override IStressMetricCollector MetricCollector { get; } = new StressMetricCollector();
 
-        public virtual IStressMetricReporter MetricReporter { get; protected set; }
+        public virtual IStressMetricReporter MetricReporter { get; } = new TimedMetricReporter();
 
         public long Iterations { get; protected set; }
 
@@ -61,6 +67,22 @@ namespace Stress.Framework
                 aggregator,
                 cancellationTokenSource,
                 DiagnosticMessageSink).RunAsync();
+        }
+
+        public override void Deserialize(IXunitSerializationInfo info)
+        {
+            base.Deserialize(info);
+
+            Clients = info.GetValue<int>(nameof(Clients));
+            Iterations = info.GetValue<long>(nameof(Iterations));
+        }
+
+        public override void Serialize(IXunitSerializationInfo info)
+        {
+            base.Serialize(info);
+
+            info.AddValue(nameof(Clients), Clients);
+            info.AddValue(nameof(Iterations), Iterations);
         }
     }
 }

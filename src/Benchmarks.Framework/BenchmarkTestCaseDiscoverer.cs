@@ -7,7 +7,6 @@ using System.Linq;
 using Microsoft.AspNetCore.Testing.xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using XunitDiagnosticMessage = Xunit.DiagnosticMessage;
 
 namespace Benchmarks.Framework
 {
@@ -33,7 +32,7 @@ namespace Benchmarks.Framework
                 if (skipReason != null)
                 {
                     _diagnosticMessageSink.OnMessage(
-                            new XunitDiagnosticMessage($"Skipping { testMethod.Method.Name }{ Environment.NewLine }Reason: { skipReason }"));
+                        new DiagnosticMessage($"Skipping { testMethod.Method.Name }{ Environment.NewLine }Reason: { skipReason }"));
                     return new List<IXunitTestCase>();
                 }
 

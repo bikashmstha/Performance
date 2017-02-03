@@ -1,4 +1,4 @@
 dotnet build
 :whiletrue
-dotnet run
+dotnet run --framework netcoreapp1.1
 goto whiletrue

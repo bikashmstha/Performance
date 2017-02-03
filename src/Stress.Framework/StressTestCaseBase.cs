@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using Microsoft.AspNetCore.Server.Testing;
+using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using NullMessageSink = Xunit.Sdk.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 
 namespace Stress.Framework
@@ -16,6 +18,15 @@ namespace Stress.Framework
     {
         private static readonly string IMetricCollectorTypeInfoName =
             new ReflectionTypeInfo(typeof(IStressMetricCollector)).Name;
+
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
+        protected StressTestCaseBase()
+        {
+            // No way for us to get access to the message sink on the execution de-serialization path.
+            // Fortunately, have reported errors during discovery.
+            DiagnosticMessageSink = new NullMessageSink();
+        }
 
         public StressTestCaseBase(
             string testApplicationName,
@@ -60,13 +71,43 @@ namespace Stress.Framework
             }
         }
 
-        public string TestApplicationName { get; }
-        protected IMessageSink DiagnosticMessageSink { get; }
-        public abstract IStressMetricCollector MetricCollector { get; protected set; }
+        public string TestApplicationName { get; private set; }
+
+        protected IMessageSink DiagnosticMessageSink { get; private set; }
+
+        public abstract IStressMetricCollector MetricCollector { get; }
+
         public string TestMethodName { get; protected set; }
+
         public string Variation { get; protected set; }
+
         public IMethodInfo WarmupMethod { get; protected set; }
+
         public ServerType ServerType { get; protected set; }
+
+        public override void Deserialize(IXunitSerializationInfo info)
+        {
+            base.Deserialize(info);
+
+            ServerType = (ServerType)Enum.Parse(typeof(ServerType), info.GetValue<string>(nameof(ServerType)));
+            TestApplicationName = info.GetValue<string>(nameof(TestApplicationName));
+            TestMethodName = info.GetValue<string>(nameof(TestMethodName));
+            Variation = info.GetValue<string>(nameof(Variation));
+
+            var warmupMethodName = info.GetValue<string>(nameof(WarmupMethod));
+            WarmupMethod = TestMethod.TestClass.Class.GetMethod(warmupMethodName, includePrivateMethod: false);
+        }
+
+        public override void Serialize(IXunitSerializationInfo info)
+        {
+            base.Serialize(info);
+
+            info.AddValue(nameof(ServerType), ServerType.ToString());
+            info.AddValue(nameof(TestApplicationName), TestApplicationName);
+            info.AddValue(nameof(TestMethodName), TestMethodName);
+            info.AddValue(nameof(Variation), Variation);
+            info.AddValue(nameof(WarmupMethod), WarmupMethod.Name);
+        }
 
         protected override string GetSkipReason(IAttributeInfo factAttribute) => EvaluateSkipConditions(TestMethod) ?? base.GetSkipReason(factAttribute);
 

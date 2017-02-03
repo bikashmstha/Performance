@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.IO;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Benchmarks.Utility.Helpers
 {
@@ -10,22 +11,20 @@ namespace Benchmarks.Utility.Helpers
         private static readonly string ArtifactFolder = "artifacts";
         private static readonly string TestAppFolder = "testapp";
         private static readonly string ScriptFolder = "scripts";
-        private static readonly string GlobalFileName = "global.json";
+        private static readonly string RootFileName = "build.sh";
 
         public static string GetRootFolder(string projectFolder)
         {
-            var di = new DirectoryInfo(projectFolder);
-
-            while (di.Parent != null)
+            var folder = new DirectoryInfo(projectFolder);
+            while (folder.Parent != null)
             {
-                var globalJsonPath = Path.Combine(di.FullName, GlobalFileName);
-
-                if (File.Exists(globalJsonPath))
+                var rootFilePath = Path.Combine(folder.FullName, RootFileName);
+                if (File.Exists(rootFilePath))
                 {
-                    return di.FullName;
+                    return folder.FullName;
                 }
 
-                di = di.Parent;
+                folder = folder.Parent;
             }
 
             // If we don't find any files then make the project folder the root
@@ -34,15 +33,15 @@ namespace Benchmarks.Utility.Helpers
 
         public static string GetNuGetConfig()
         {
-            var testFolder = GetRootFolder(Directory.GetCurrentDirectory());
+            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
 
-            return Path.Combine(testFolder, "NuGet.config");
+            return Path.Combine(rootFolder, "NuGet.config");
         }
 
         public static string GetTestAppFolder(string sampleName)
         {
-            var testFolder = GetRootFolder(Directory.GetCurrentDirectory());
-            var sampleFolder = Path.Combine(testFolder, TestAppFolder, sampleName);
+            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+            var sampleFolder = Path.Combine(rootFolder, TestAppFolder, sampleName);
 
             if (Directory.Exists(sampleFolder))
             {
@@ -56,8 +55,8 @@ namespace Benchmarks.Utility.Helpers
 
         public static string GetScript(string scriptName)
         {
-            var testFolder = Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()));
-            var script = Path.Combine(testFolder, ScriptFolder, scriptName);
+            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+            var script = Path.Combine(rootFolder, ScriptFolder, scriptName);
 
             if (File.Exists(script))
             {
@@ -71,8 +70,8 @@ namespace Benchmarks.Utility.Helpers
 
         public static string GetArtifactFolder()
         {
-            var testFolder = GetRootFolder(Directory.GetCurrentDirectory());
-            var result = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(testFolder)), ArtifactFolder);
+            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+            var result = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(rootFolder)), ArtifactFolder);
 
             if (!Directory.Exists(result))
             {

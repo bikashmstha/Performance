@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\build\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json;config.json;seed.sql" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Benchmarks.Utility\Benchmarks.Utility.csproj" />
+    <ProjectReference Include="..\..\testapp\BasicApi\BasicApi.csproj" />
+    <ProjectReference Include="..\..\testapp\BasicViews\BasicViews.csproj" />
+    <ProjectReference Include="..\..\testapp\BigModelBinding\BigModelBinding.csproj" />
+    <ProjectReference Include="..\..\testapp\BigViews\BigViews.csproj" />
+    <ProjectReference Include="..\..\testapp\LargeStaticView\LargeStaticView.csproj" />
+    <ProjectReference Include="..\..\testapp\MusicStoreViews\MusicStoreViews.csproj" />
+    <ProjectReference Include="..\..\testapp\RazorCodeGenerator\RazorCodeGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.AspNetCore.Testing" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.2.0-*" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-*" />
+    <PackageReference Include="xunit" Version="2.2.0-*" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <!--
+    Tests in this project exercise view compilation and other MVC ApplicationParts features. In turn, ApplicationParts
+    use DependencyContext.Load() and that looks next to a .dll for its .deps.json. Thus, our test applications need
+    their .deps.json file in this project's bin directory.
+  -->
+  <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+    <ItemGroup>
+      <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+    </ItemGroup>
+
+    <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+  </Target>
+</Project>

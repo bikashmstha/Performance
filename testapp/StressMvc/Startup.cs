@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.IO;
 using System.Net;
 using System.Runtime;
 using Microsoft.AspNetCore.Builder;
@@ -20,10 +21,12 @@ namespace StarterMvc
     {
         static readonly string _httpsCertFile = "stressmvc.pfx";
         static readonly string _httpsCertPwd = "stressmvc";
+
         public Startup(IHostingEnvironment env)
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
@@ -114,7 +117,7 @@ namespace StarterMvc
                 var urls = config["urls"];
                 Console.WriteLine("Host is Kestrel");
 
-                var useHttps = bool.Parse(config["SecurityOption:EnableHTTPS"]);
+                var useHttps = bool.Parse(config["SecurityOption:EnableHTTPS"] ?? "false");
                 hostBuilder.UseKestrel(options =>
                 {
                     // options.ThreadCount = 4;
@@ -153,8 +156,10 @@ namespace StarterMvc
                 });
             }
 
-            var host = hostBuilder.UseConfiguration(config)
+            var host = hostBuilder
+                .UseConfiguration(config)
                 .UseIISIntegration()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
 
@@ -188,4 +193,3 @@ namespace StarterMvc
         }
     }
 }
-

@@ -7,9 +7,12 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+#if !NET451
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.PlatformAbstractions;
+#endif
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using XunitDiagnosticMessage = Xunit.DiagnosticMessage;
 
 namespace Stress.Framework
 {
@@ -75,7 +78,7 @@ namespace Stress.Framework
                 if (!startResult.SuccessfullyStarted)
                 {
                     _diagnosticMessageSink.OnMessage(
-                        new XunitDiagnosticMessage("Failed to start application server."));
+                        new DiagnosticMessage("Failed to start application server."));
                     return new RunSummary() { Total = 1, Failed = 1 };
                 }
                 else
@@ -95,12 +98,12 @@ namespace Stress.Framework
             if (runSummary.Failed != 0)
             {
                 _diagnosticMessageSink.OnMessage(
-                    new XunitDiagnosticMessage($"No valid results for {TestCase.DisplayName}. {runSummary.Failed} of {TestCase.Iterations} iterations failed."));
+                    new DiagnosticMessage($"No valid results for {TestCase.DisplayName}. {runSummary.Failed} of {TestCase.Iterations} iterations failed."));
             }
             else
             {
                 runSummary.PopulateMetrics(TestCase.MetricCollector);
-                _diagnosticMessageSink.OnMessage(new XunitDiagnosticMessage(runSummary.ToString()));
+                _diagnosticMessageSink.OnMessage(new DiagnosticMessage(runSummary.ToString()));
 
                 runSummary.PublishOutput(TestCase, MessageBus);
             }
@@ -133,15 +136,15 @@ namespace Stress.Framework
 
         private static string GetMachineName()
         {
-#if NETSTANDARDAPP1_5
+#if NET451
+            return Environment.MachineName;
+#else
             var config = new ConfigurationBuilder()
-                .SetBasePath(".")
+                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddEnvironmentVariables()
                 .Build();
 
             return config["computerName"];
-#else
-            return Environment.MachineName;
 #endif
         }
 

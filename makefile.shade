@@ -1,18 +1,29 @@
 
+var BASE_DIR='${Directory.GetCurrentDirectory()}'
 var VERSION='0.1'
 var FULL_VERSION='0.1'
 var AUTHORS='Microsoft Open Technologies, Inc.'
-var TEST_PROJECT_GLOB='test*/*/project.json'
 var PREVIOUS_NO_PARALLEL_TEST_PROJECTS='${E("NO_PARALLEL_TEST_PROJECTS")}'
+var SAMPLES_PROJECT_GLOB = '${new[] { "dashboard/*/*.csproj", "stress-test/*/*.csproj", "testapp/*/*.csproj", "testapp/*/*/*.csproj" }}'
 
 use-standard-lifecycle
 k-standard-goals
 
+#repo-initialize-more .repo-initialize target='initialize'
+  use-volatile-feed
+  @{
+    // workaround https://github.com/Microsoft/msbuild/issues/1587
+    if (!NoRestore)
+    {
+      Dotnet("msbuild \"" + Path.Combine(BASE_DIR, "build/restore.more.proj") + "\"");
+    }
+  }
+
 #stress-test .compile
   @{
-    var projectFiles = Files.Include("stress-test/**/project.json").Exclude("**/bin/*/app/project.json").ToList();
+    var projectFiles = Files.Include("stress-test/**/*.csproj").Exclude("**/bin/**/*").ToList();
 
-    projectFiles.ForEach(projectFile => 
+    projectFiles.ForEach(projectFile =>
     {
       var projectFolder = Path.GetDirectoryName(projectFile);
       var projectName = Path.GetFileName(projectFolder);

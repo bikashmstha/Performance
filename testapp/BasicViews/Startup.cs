@@ -2,22 +2,22 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace BasicViews
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment hosting)
+        public Startup(IHostingEnvironment env)
         {
             Configuration = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
+                .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json")
                 .Build();
         }
@@ -70,13 +70,13 @@ namespace BasicViews
         {
             var config = new ConfigurationBuilder()
                 .AddCommandLine(args)
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .Build();
 
             var application = new WebHostBuilder()
                 .UseKestrel()
                 .UseUrls("http://+:5000")
                 .UseConfiguration(config)
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
 
@@ -84,4 +84,3 @@ namespace BasicViews
         }
     }
 }
-

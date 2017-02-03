@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Benchmarks.Utility.Helpers;
 using Benchmarks.Utility.Logging;
-using Microsoft.AspNetCore.Server.Testing;
+using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Microsoft.Extensions.Logging;
 
 namespace Stress.Framework

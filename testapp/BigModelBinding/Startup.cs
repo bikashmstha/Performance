@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -52,6 +53,7 @@ namespace BigModelBinding
                 .UseKestrel()
                 .UseUrls("http://+:5000")
                 .UseConfiguration(config)
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
 
@@ -122,4 +124,3 @@ namespace BigModelBinding
         }
     }
 }
-

@@ -1,15 +1,15 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Benchmarks.Framework;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Benchmarks.Framework;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Testing.xunit;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.AspNetCore.Testing.xunit;
 using Xunit;
 
 namespace MvcBenchmarks.InMemory
@@ -62,13 +62,13 @@ namespace MvcBenchmarks.InMemory
                 // silently with OSSkipCondition attributes
             }
         }
-        
+
         public async Task<string> GetAuthorizationToken()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/token?username=writer@example.com");
             request.Headers.Add("Cache-Control", new [] {"no-cache"});
             var response = await Client.SendAsync(request);
-            
+
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }

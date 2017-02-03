@@ -9,8 +9,13 @@ using Benchmarks.Framework;
 using Benchmarks.Framework.BenchmarkPersistence;
 using Benchmarks.Utility.Azure;
 using Benchmarks.Utility.Helpers;
+#if !NET451
 using Microsoft.Extensions.Configuration;
+#endif
 using Microsoft.Extensions.Logging;
+#if !NET451
+using Microsoft.Extensions.PlatformAbstractions;
+#endif
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Performance
@@ -110,7 +115,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
             runner.Execute($"git clean -xdff .", sourcePath);
             Assert.NotEqual(-1, runner.Execute($"robocopy {sourcePath} {_testsitesource} /E /S /XD node_modules")); // robcopy doesn't return 0
-            File.WriteAllText(Path.Combine(_testsitesource, "global.json"), DotnetHelper.GetDefaultInstance().BuildGlobalJson());
             File.Copy(PathHelper.GetNuGetConfig(), Path.Combine(_testsitesource, "NuGet.config"));
 
             _log.LogInformation($"Testsite sources are copied to {_testsitesource}.");
@@ -159,7 +163,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
                 Assert.False(true, $"Fail to create test web site name after {retry} tries");
             }
 
-            _azure.AddAppSetting(_testsitename, "DNX_FEED", "https://www.myget.org/F/aspnetcidev/api/v2");
             _azure.SetWebSiteScaleMode(_testsitename, "Basic");
             _azure.ResetCredential(_username, _password);
         }
@@ -218,15 +221,15 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
         private static string GetMachineName()
         {
-#if NETSTANDARDAPP1_5
+#if NET451
+            return Environment.MachineName;
+#else
             var config = new ConfigurationBuilder()
-                .SetBasePath(".")
+                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddEnvironmentVariables()
                 .Build();
 
             return config["computerName"];
-#else
-            return Environment.MachineName;
 #endif
         }
     }

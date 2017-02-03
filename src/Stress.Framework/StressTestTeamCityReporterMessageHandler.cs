@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -40,12 +41,25 @@ namespace Stress.Framework
             _statisticFolder = StressConfig.Instance.StatisticOutputFolder;
         }
 
-        public override bool OnMessage(IMessageSinkMessage message)
+        public override bool OnMessageWithTypes(IMessageSinkMessage message, HashSet<string> messageTypes)
         {
-            return DoVisit<ITestProgressMessage>(message, m => Visit(m)) &&
-                   DoVisit<ITestSummaryStatisticsMessage>(message, m => Visit(m)) &&
-                   DoVisit<ITestStatisticsMessage>(message, m => Visit(m)) &&
-                   base.OnMessage(message);
+            var more = true;
+            if (message is ITestProgressMessage progressMessage)
+            {
+                more = Visit(progressMessage);
+            }
+
+            if (more && message is ITestSummaryStatisticsMessage summaryMessage)
+            {
+                more = Visit(summaryMessage);
+            }
+
+            if (more && message is ITestStatisticsMessage statisticsMessage)
+            {
+                more = Visit(statisticsMessage);
+            }
+
+            return more && base.OnMessageWithTypes(message, messageTypes);
         }
 
         protected virtual bool Visit(ITestProgressMessage message)

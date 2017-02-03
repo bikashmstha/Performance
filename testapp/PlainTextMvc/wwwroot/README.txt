@@ -1,1 +1,0 @@
-﻿This file is here to keep wwwroot directory which is required for correct publish

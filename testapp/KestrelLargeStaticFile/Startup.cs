@@ -33,6 +33,7 @@ namespace Microsoft.AspNetCore.Test.Perf.WebFx.Apps.HelloWorld
                 .UseKestrel()
                 .UseConfiguration(config)
                 .UseIISIntegration()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseWebRoot("wwwroot")
                 .UseStartup<Startup>()
                 .Build();

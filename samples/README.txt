@@ -1,0 +1,1 @@
+// This file and its containing folder exist to ensure KoreBuild uses the SAMPLES_PROJECT_GLOB.

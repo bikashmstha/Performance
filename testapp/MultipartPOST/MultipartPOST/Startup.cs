@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
@@ -17,6 +18,7 @@ namespace MultipartPost
         private const long OneKilobyte = OneByte * 1024;
         private const long OneMegabyte = OneKilobyte * 1024;
         private const long OneGigabyte = OneMegabyte * 1024;
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<FormOptions>(options =>
@@ -65,6 +67,7 @@ namespace MultipartPost
                 .UseKestrel()
                 .UseConfiguration(config)
                 .UseIISIntegration()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
 
@@ -72,4 +75,3 @@ namespace MultipartPost
         }
     }
 }
-

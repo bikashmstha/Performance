@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 15.0.26127.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MultipartPOST", "MultipartPOST\MultipartPOST.xproj", "{E5D2EE3F-672A-41A5-9B0B-0A979E333920}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultipartPOST", "MultipartPOST\MultipartPOST.csproj", "{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MultipartPOSTClient", "MultipartPOSTClient\MultipartPOSTClient.xproj", "{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultipartPOSTClient", "MultipartPOSTClient\MultipartPOSTClient.csproj", "{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipartPOST-MVC5", "Baseline_DesktopCLR_MVC5_MultipartPOST\MultipartPOST-MVC5.csproj", "{6ED905F2-CD62-4F98-A9FE-E2DFA8F664DA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultipartPOST-MVC5", "Baseline_DesktopCLR_MVC5_MultipartPOST\MultipartPOST-MVC5.csproj-net452", "{6ED905F2-CD62-4F98-A9FE-E2DFA8F664DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E5D2EE3F-672A-41A5-9B0B-0A979E333920}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5D2EE3F-672A-41A5-9B0B-0A979E333920}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5D2EE3F-672A-41A5-9B0B-0A979E333920}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5D2EE3F-672A-41A5-9B0B-0A979E333920}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU

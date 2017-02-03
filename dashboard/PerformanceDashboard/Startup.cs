@@ -1,6 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.IO;
 using Benchmarks.Framework.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +18,7 @@ namespace PerformanceDashboard
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json");
             if (env.IsDevelopment())
             {
@@ -80,6 +82,7 @@ namespace PerformanceDashboard
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
                 .UseIISIntegration()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .UseKestrel()
                 .Build();

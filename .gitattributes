@@ -1,0 +1,8 @@
+# Auto-detect text vs binary
+*     text=auto
+# Better context in unified diffs
+*.cs  diff=csharp
+# Force \n on shell scripts
+*.sh  eol=lf
+# Force \r\n on solution files (may not be necessary)
+*.sln eol=crlf

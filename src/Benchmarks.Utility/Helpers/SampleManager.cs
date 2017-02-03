@@ -78,6 +78,9 @@ namespace Benchmarks.Utility.Helpers
         private class RestoredSample : SampleEntry
         {
             private static readonly string _pathToNugetConfig = GetPathToNugetConfig();
+            private static readonly string _rootFolder =
+                PathHelper.GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+            private static readonly string _buildFolder = Path.Combine(_rootFolder, "build");
 
             private static string GetPathToNugetConfig()
             {
@@ -96,10 +99,14 @@ namespace Benchmarks.Utility.Helpers
                     }
                     relativePath = Path.Combine("..", relativePath);
                 }
+
                 throw new Exception($"Cannot determine the location of '{nugetConfigFileName}' from base path '{PlatformServices.Default.Application.ApplicationBasePath}'");
             }
 
-            private RestoredSample(string name) : base(name) { }
+            private RestoredSample(string name)
+                : base(name)
+            {
+            }
 
             public static RestoredSample Create(string name) => new RestoredSample(name);
 
@@ -113,28 +120,42 @@ namespace Benchmarks.Utility.Helpers
 
                 var tempFolder = PathHelper.GetNewTempFolder();
                 Directory.CreateDirectory(tempFolder); // workaround for Linux
-                var target = Path.Combine(tempFolder, Name);
+                var target = Path.Combine(tempFolder, "app", Name);
                 Directory.CreateDirectory(target);
+                var buildTarget = Path.Combine(tempFolder, "build");
 
-                string copyCommand, copySampleParameters, copyNugetConfigParameters, copyGlobalJsonParameters;
+                string copyCommand, copyBuildParameters, copyNugetConfigParameters, copyPropsParameters, copySampleParameters;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     copyCommand = "robocopy";
-                    copySampleParameters = $"\"{SourcePath}\" \"{target}\" /E /S /XD node_modules /XF project.lock.json";
-                    copyNugetConfigParameters = $"\"{_pathToNugetConfig}\" \"{target}\" NuGet.config";
-                    copyGlobalJsonParameters = $"\"{_pathToNugetConfig}\" \"{target}\" global.json";
+                    copyBuildParameters = $"\"{_buildFolder}\" \"{buildTarget}\" /NP /S";
+                    copyNugetConfigParameters = $"\"{_pathToNugetConfig}\" \"{target}\" NuGet.config /NP";
+                    copyPropsParameters = $"\"{_rootFolder}\" \"{tempFolder}\" *.props *.targets /NP";
+                    copySampleParameters = $"\"{SourcePath}\" \"{target}\" /NP /S /XD bin node_modules obj /XF project.lock.json";
                 }
                 else
                 {
                     copyCommand = "rsync";
-                    copySampleParameters = $"--recursive --exclude=node_modules --exclude=project.lock.json \"{SourcePath}/\" \"{target}/\"";
+                    copyBuildParameters = $"\"{_buildFolder}/\"*.* \"{buildTarget}\"";
                     copyNugetConfigParameters = $"\"{_pathToNugetConfig}/NuGet.config\" \"{target}/NuGet.config\"";
-                    copyGlobalJsonParameters = $"\"{_pathToNugetConfig}/global.json\" \"{target}/global.json\"";
+                    copyPropsParameters = "--include=*.props --include=*.targets --exclude=*.* " +
+                        $"\"{_rootFolder}/\"*.* \"{tempFolder}\"";
+                    copySampleParameters = "--recursive --exclude=bin/ --exclude=node_modules/ --exclude=obj/ " +
+                        $"--exclude=project.lock.json \"{SourcePath}/\" \"{target}/\"";
                 }
+
                 var runner = new CommandLineRunner(copyCommand);
-                runner.Execute(copySampleParameters);
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    // Let the shell expand the wildcards for the content of the build folder as well as the props and
+                    // targets in the root folder.
+                    runner.UseShellExecute = true;
+                }
+
+                runner.Execute(copyBuildParameters);
                 runner.Execute(copyNugetConfigParameters);
-                runner.Execute(copyGlobalJsonParameters);
+                runner.Execute(copyPropsParameters);
+                runner.Execute(copySampleParameters);
                 if (!DotnetHelper.GetDefaultInstance().Restore(target, quiet: true))
                 {
                     Directory.Delete(target, recursive: true);

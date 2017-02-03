@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26208.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{39290E57-4492-4F65-89D6-64C95DE73976}"
 EndProject
@@ -8,77 +8,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testapp", "testapp", "{93AB
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0289D968-B984-43B6-8B2A-9E66EB75B723}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
 		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Tests.Performance", "test\Microsoft.AspNetCore.Tests.Performance\Microsoft.AspNetCore.Tests.Performance.xproj", "{76C8FD9D-615A-4741-8E03-A11F7C20A99F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StarterMvc", "testapp\StarterMvc\StarterMvc.xproj", "{8397CB65-B60F-4881-B0A1-E881593A487C}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "StressSimpleMvc", "testapp\StressMvc\StressSimpleMvc.xproj", "{1BE3E695-7B85-43C0-971A-F7899A214BFF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F42CBBCE-8CB7-4139-B084-3586FB68ACDA}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Benchmarks.Framework", "src\Benchmarks.Framework\Benchmarks.Framework.xproj", "{488D79ED-7138-4CCB-9A9F-458FA4A076A8}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microbenchmarks.Tests", "test\Microbenchmarks.Tests\Microbenchmarks.Tests.xproj", "{9B73D4A3-CA9D-4396-8000-F69E9B0EB9D3}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Benchmarks.Utility", "src\Benchmarks.Utility\Benchmarks.Utility.xproj", "{65DCA477-590C-4453-B688-7BBD057B2C6F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dashboard", "dashboard", "{6D839E2E-5C8E-4350-BEE4-D132FEC8DD9D}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PerformanceDashboard", "dashboard\PerformanceDashboard\PerformanceDashboard.xproj", "{8BE8D424-5C77-4651-93D2-F4FA14198B15}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Stress.Framework", "src\Stress.Framework\Stress.Framework.xproj", "{0B2EC639-4697-4854-9512-122B1ACD6253}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stress-test", "stress-test", "{29C78887-BC5D-449D-BDC5-8BC68CE43C33}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Tests.Stress", "stress-test\Microsoft.AspNetCore.Tests.Stress\Microsoft.AspNetCore.Tests.Stress.xproj", "{67CEE842-1B97-4663-A509-1F18A86F9A5F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "HelloWorldMvc", "testapp\HelloWorldMvc\HelloWorldMvc.xproj", "{E5D2EE3F-672A-41A5-9B0B-0A979E333920}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Tests.Throughput", "test\Microsoft.AspNetCore.Tests.Throughput\Microsoft.AspNetCore.Tests.Throughput.xproj", "{89762442-68F8-4B88-9345-17E92D985CC9}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BasicKestrel", "testapp\BasicKestrel\BasicKestrel.xproj", "{33C63C7D-7CC1-49D0-82AD-7DCB8125727F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PlainTextMvc", "testapp\PlainTextMvc\PlainTextMvc.xproj", "{1ECBDDCF-BFFB-4D9F-89B2-FE680516D306}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{76FF3164-252E-415C-9292-2DFFB95F6DDB}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BasicKestrelJson", "testapp\BasicKestrelJson\BasicKestrelJson.xproj", "{DCEBE256-821E-4324-A5E3-4AB1AAFD94B2}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LargePageMvc", "testapp\LargePageMvc\LargePageMvc.xproj", "{41C8AA08-AD9C-4076-B699-01CD4B3D0E69}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "ThroughputResultReporter", "tools\ThroughputResultReporter\ThroughputResultReporter.xproj", "{4020874D-D5B7-495F-A2F2-1BD65FA7BFD0}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LargePageGenerator", "tools\LargePageGenerator\LargePageGenerator.xproj", "{33061155-BA79-431C-834B-546B959EE71A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BasicViews", "testapp\BasicViews\BasicViews.xproj", "{8C381F15-1274-469E-99D6-F515AEB59E52}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BigModelBinding", "testapp\BigModelBinding\BigModelBinding.xproj", "{25713C8C-CDBC-455F-AB8B-B0E9C58A182A}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BigViews", "testapp\BigViews\BigViews.xproj", "{DC51B887-5B2C-4298-B5C8-392F06456C39}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LargeStaticView", "testapp\LargeStaticView\LargeStaticView.xproj", "{2C0C631C-201D-4692-9A12-B3DF84ABCD08}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LocalizedViews", "testapp\LocalizedViews\LocalizedViews.xproj", "{1CA1E0F0-C024-46CD-993E-9D9511AF9C55}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RazorCodeGenerator", "testapp\RazorCodeGenerator\RazorCodeGenerator.xproj", "{0236230D-D34D-4546-9221-E5767F19ED9E}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TestApp.Test", "test\TestApp.Test\TestApp.Test.xproj", "{82B767A5-1640-4561-9F04-2E90AD0BDEFB}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "PooledKestrel", "testapp\PooledKestrel\PooledKestrel.xproj", "{F14C584D-3175-43B8-996F-59046629CD27}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BasicApi", "testapp\BasicApi\BasicApi.xproj", "{67598949-B2F2-4E43-8D89-431712978A48}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "HelloWorldMvcCore", "testapp\HelloWorldMvcCore\HelloWorldMvcCore.xproj", "{D3F47B0C-2CA7-409B-9951-586876B2A868}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LargeJsonApi", "LargeJsonApi", "{A6468B67-1ED9-461E-8926-2C5C8C8ECF58}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LargeJsonApi", "testapp\LargeJsonApi\LargeJsonApi\LargeJsonApi.xproj", "{EB3E02EB-CB0D-413C-87A6-1BF88AA0B69F}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LargeJsonApiClient", "testapp\LargeJsonApi\LargeJsonApiClient\LargeJsonApiClient.xproj", "{DDE8C1F4-4E4B-40AF-B940-C2828385458C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{025E537C-B512-492C-97FE-C185FDB3BDA8}"
 EndProject
@@ -94,17 +35,75 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{5FA83898
 		testapp\LargeJsonApi\Shared\Model\Series.cs = testapp\LargeJsonApi\Shared\Model\Series.cs
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "KestrelLargeStaticFile", "testapp\KestrelLargeStaticFile\KestrelLargeStaticFile.xproj", "{BC82991E-EA43-447D-BB7B-F5E2B0733306}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "KestrelShutdown", "testapp\KestrelShutdown\KestrelShutdown.xproj", "{2BFB3424-44CC-4E9C-A0BD-96299E9827EB}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MultipartPOST", "MultipartPOST", "{4360A0FB-7357-4CB4-9B0F-ED71E71B1077}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MultipartPOST", "testapp\MultipartPOST\MultipartPOST\MultipartPOST.xproj", "{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNetCore.Tests.Performance", "test\Microsoft.AspNetCore.Tests.Performance\Microsoft.AspNetCore.Tests.Performance.csproj", "{76C8FD9D-615A-4741-8E03-A11F7C20A99F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MultipartPOSTClient", "testapp\MultipartPOST\MultipartPOSTClient\MultipartPOSTClient.xproj", "{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarterMvc", "testapp\StarterMvc\StarterMvc.csproj", "{8397CB65-B60F-4881-B0A1-E881593A487C}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MusicStoreViews", "testapp\MusicStoreViews\MusicStoreViews.xproj", "{3AB9484E-B203-4095-BE21-0A383DFFD6A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks.Framework", "src\Benchmarks.Framework\Benchmarks.Framework.csproj", "{488D79ED-7138-4CCB-9A9F-458FA4A076A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microbenchmarks.Tests", "test\Microbenchmarks.Tests\Microbenchmarks.Tests.csproj", "{9B73D4A3-CA9D-4396-8000-F69E9B0EB9D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks.Utility", "src\Benchmarks.Utility\Benchmarks.Utility.csproj", "{65DCA477-590C-4453-B688-7BBD057B2C6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceDashboard", "dashboard\PerformanceDashboard\PerformanceDashboard.csproj", "{8BE8D424-5C77-4651-93D2-F4FA14198B15}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stress.Framework", "src\Stress.Framework\Stress.Framework.csproj", "{0B2EC639-4697-4854-9512-122B1ACD6253}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNetCore.Tests.Stress", "stress-test\Microsoft.AspNetCore.Tests.Stress\Microsoft.AspNetCore.Tests.Stress.csproj", "{67CEE842-1B97-4663-A509-1F18A86F9A5F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldMvc", "testapp\HelloWorldMvc\HelloWorldMvc.csproj", "{E5D2EE3F-672A-41A5-9B0B-0A979E333920}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Tests.Throughput", "test\Microsoft.AspNetCore.Tests.Throughput\Microsoft.AspNetCore.Tests.Throughput.csproj", "{89762442-68F8-4B88-9345-17E92D985CC9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicKestrel", "testapp\BasicKestrel\BasicKestrel.csproj", "{33C63C7D-7CC1-49D0-82AD-7DCB8125727F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlainTextMvc", "testapp\PlainTextMvc\PlainTextMvc.csproj", "{1ECBDDCF-BFFB-4D9F-89B2-FE680516D306}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicKestrelJson", "testapp\BasicKestrelJson\BasicKestrelJson.csproj", "{DCEBE256-821E-4324-A5E3-4AB1AAFD94B2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargePageMvc", "testapp\LargePageMvc\LargePageMvc.csproj", "{41C8AA08-AD9C-4076-B699-01CD4B3D0E69}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThroughputResultReporter", "tools\ThroughputResultReporter\ThroughputResultReporter.csproj", "{4020874D-D5B7-495F-A2F2-1BD65FA7BFD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargePageGenerator", "tools\LargePageGenerator\LargePageGenerator.csproj", "{33061155-BA79-431C-834B-546B959EE71A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicViews", "testapp\BasicViews\BasicViews.csproj", "{8C381F15-1274-469E-99D6-F515AEB59E52}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BigModelBinding", "testapp\BigModelBinding\BigModelBinding.csproj", "{25713C8C-CDBC-455F-AB8B-B0E9C58A182A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BigViews", "testapp\BigViews\BigViews.csproj", "{DC51B887-5B2C-4298-B5C8-392F06456C39}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeStaticView", "testapp\LargeStaticView\LargeStaticView.csproj", "{2C0C631C-201D-4692-9A12-B3DF84ABCD08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalizedViews", "testapp\LocalizedViews\LocalizedViews.csproj", "{1CA1E0F0-C024-46CD-993E-9D9511AF9C55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorCodeGenerator", "testapp\RazorCodeGenerator\RazorCodeGenerator.csproj", "{0236230D-D34D-4546-9221-E5767F19ED9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Test", "test\TestApp.Test\TestApp.Test.csproj", "{82B767A5-1640-4561-9F04-2E90AD0BDEFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PooledKestrel", "testapp\PooledKestrel\PooledKestrel.csproj", "{F14C584D-3175-43B8-996F-59046629CD27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicApi", "testapp\BasicApi\BasicApi.csproj", "{67598949-B2F2-4E43-8D89-431712978A48}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldMvcCore", "testapp\HelloWorldMvcCore\HelloWorldMvcCore.csproj", "{D3F47B0C-2CA7-409B-9951-586876B2A868}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeJsonApi", "testapp\LargeJsonApi\LargeJsonApi\LargeJsonApi.csproj", "{EB3E02EB-CB0D-413C-87A6-1BF88AA0B69F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LargeJsonApiClient", "testapp\LargeJsonApi\LargeJsonApiClient\LargeJsonApiClient.csproj", "{DDE8C1F4-4E4B-40AF-B940-C2828385458C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelLargeStaticFile", "testapp\KestrelLargeStaticFile\KestrelLargeStaticFile.csproj", "{BC82991E-EA43-447D-BB7B-F5E2B0733306}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KestrelShutdown", "testapp\KestrelShutdown\KestrelShutdown.csproj", "{2BFB3424-44CC-4E9C-A0BD-96299E9827EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultipartPOST", "testapp\MultipartPOST\MultipartPOST\MultipartPOST.csproj", "{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultipartPOSTClient", "testapp\MultipartPOST\MultipartPOSTClient\MultipartPOSTClient.csproj", "{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MusicStoreViews", "testapp\MusicStoreViews\MusicStoreViews.csproj", "{3AB9484E-B203-4095-BE21-0A383DFFD6A7}"
+EndProject
+Project("{13B669BE-BB05-4DDF-9536-439F39A36129}") = "StressMvc", "testapp\StressMvc\StressMvc.csproj", "{475ADA8C-B79C-4E42-B982-321BC482F817}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,10 +119,6 @@ Global
 		{8397CB65-B60F-4881-B0A1-E881593A487C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8397CB65-B60F-4881-B0A1-E881593A487C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8397CB65-B60F-4881-B0A1-E881593A487C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1BE3E695-7B85-43C0-971A-F7899A214BFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1BE3E695-7B85-43C0-971A-F7899A214BFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1BE3E695-7B85-43C0-971A-F7899A214BFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1BE3E695-7B85-43C0-971A-F7899A214BFF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{488D79ED-7138-4CCB-9A9F-458FA4A076A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{488D79ED-7138-4CCB-9A9F-458FA4A076A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{488D79ED-7138-4CCB-9A9F-458FA4A076A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -248,14 +243,22 @@ Global
 		{3AB9484E-B203-4095-BE21-0A383DFFD6A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB9484E-B203-4095-BE21-0A383DFFD6A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB9484E-B203-4095-BE21-0A383DFFD6A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{475ADA8C-B79C-4E42-B982-321BC482F817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{475ADA8C-B79C-4E42-B982-321BC482F817}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{475ADA8C-B79C-4E42-B982-321BC482F817}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{475ADA8C-B79C-4E42-B982-321BC482F817}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{A6468B67-1ED9-461E-8926-2C5C8C8ECF58} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
+		{025E537C-B512-492C-97FE-C185FDB3BDA8} = {A6468B67-1ED9-461E-8926-2C5C8C8ECF58}
+		{1277A3EE-159C-43C0-9B58-DFA6EEBBF9FA} = {025E537C-B512-492C-97FE-C185FDB3BDA8}
+		{5FA83898-239E-4B1A-A86E-FBC95A9DA059} = {025E537C-B512-492C-97FE-C185FDB3BDA8}
+		{4360A0FB-7357-4CB4-9B0F-ED71E71B1077} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{76C8FD9D-615A-4741-8E03-A11F7C20A99F} = {39290E57-4492-4F65-89D6-64C95DE73976}
 		{8397CB65-B60F-4881-B0A1-E881593A487C} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
-		{1BE3E695-7B85-43C0-971A-F7899A214BFF} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{488D79ED-7138-4CCB-9A9F-458FA4A076A8} = {F42CBBCE-8CB7-4139-B084-3586FB68ACDA}
 		{9B73D4A3-CA9D-4396-8000-F69E9B0EB9D3} = {39290E57-4492-4F65-89D6-64C95DE73976}
 		{65DCA477-590C-4453-B688-7BBD057B2C6F} = {F42CBBCE-8CB7-4139-B084-3586FB68ACDA}
@@ -280,17 +283,13 @@ Global
 		{F14C584D-3175-43B8-996F-59046629CD27} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{67598949-B2F2-4E43-8D89-431712978A48} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{D3F47B0C-2CA7-409B-9951-586876B2A868} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
-		{A6468B67-1ED9-461E-8926-2C5C8C8ECF58} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{EB3E02EB-CB0D-413C-87A6-1BF88AA0B69F} = {A6468B67-1ED9-461E-8926-2C5C8C8ECF58}
 		{DDE8C1F4-4E4B-40AF-B940-C2828385458C} = {A6468B67-1ED9-461E-8926-2C5C8C8ECF58}
-		{025E537C-B512-492C-97FE-C185FDB3BDA8} = {A6468B67-1ED9-461E-8926-2C5C8C8ECF58}
-		{1277A3EE-159C-43C0-9B58-DFA6EEBBF9FA} = {025E537C-B512-492C-97FE-C185FDB3BDA8}
-		{5FA83898-239E-4B1A-A86E-FBC95A9DA059} = {025E537C-B512-492C-97FE-C185FDB3BDA8}
 		{BC82991E-EA43-447D-BB7B-F5E2B0733306} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{2BFB3424-44CC-4E9C-A0BD-96299E9827EB} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
-		{4360A0FB-7357-4CB4-9B0F-ED71E71B1077} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 		{A046AE5B-B4CD-46C6-9B2C-44AB8647BE5C} = {4360A0FB-7357-4CB4-9B0F-ED71E71B1077}
 		{B44BCA57-E0F1-494E-84A2-FA4D8491C9B1} = {4360A0FB-7357-4CB4-9B0F-ED71E71B1077}
 		{3AB9484E-B203-4095-BE21-0A383DFFD6A7} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
+		{475ADA8C-B79C-4E42-B982-321BC482F817} = {93AB896C-D117-4DBB-9DB1-24903022E21B}
 	EndGlobalSection
 EndGlobal

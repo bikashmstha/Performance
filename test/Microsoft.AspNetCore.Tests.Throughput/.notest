@@ -1,0 +1,2 @@
+// This file is a feature of KoreBuild that prevents tests from running in this directory. Tests in this project
+// require setup as well as "client.names", "password_file", "server.name", and "username" settings in the environment.

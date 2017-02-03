@@ -59,21 +59,6 @@ namespace Microbenchmarks.Tests
             {
                 collector.StopCollection();
             }
-
-            public static void Main(string[] args)
-            {
-                var config = new ConfigurationBuilder()
-                    .AddCommandLine(args)
-                    .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
-                    .Build();
-
-                var host = new WebHostBuilder()
-                    .UseConfiguration(config)
-                    .UseStartup<TestStartup>()
-                    .Build();
-
-                host.Run();
-            }
         }
 
         private class TestServer : IServer
