@@ -15,6 +15,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.2.0-*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.2.0-*" />
     <PackageReference Include="Microsoft.Extensions.RuntimeEnvironment.Sources" Version="1.2.0-*" PrivateAssets="All" />
-    <PackageReference Include="xunit.runner.reporters" Version="2.2.0-*" />
+    <PackageReference Include="xunit.runner.reporters" Version="2.2.0-beta5-build3474" />
   </ItemGroup>
 </Project>
