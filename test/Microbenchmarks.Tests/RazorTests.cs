@@ -63,7 +63,7 @@ namespace Microbenchmarks.Tests.Razor
         public void ViewParsing(bool designTime)
         {
             // Arrange
-            var services = ConfigureDefaultServices(Environment.CurrentDirectory);
+            var services = ConfigureDefaultServices(Directory.GetCurrentDirectory());
             var compilationService = (RazorCompilationService)services.GetRequiredService<IRazorCompilationService>();
 
             var assembly = typeof(RazorTests).GetTypeInfo().Assembly;

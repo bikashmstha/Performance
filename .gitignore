@@ -8,6 +8,7 @@ packages/
 artifacts/
 PublishProfiles/
 .vs/
+.vscode/
 bower_components/
 node_modules/
 **/wwwroot/lib/

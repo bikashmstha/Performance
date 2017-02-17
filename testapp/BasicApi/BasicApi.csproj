@@ -23,4 +23,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.2.0-*" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.2.0-*" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
+    <PackageReference Include="System.Security.Cryptography.Csp" Version="$(CoreFxVersion)" />
+  </ItemGroup>
 </Project>
