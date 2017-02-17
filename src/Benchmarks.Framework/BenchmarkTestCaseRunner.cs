@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Benchmarks.Framework.BenchmarkPersistence;
-#if !NET451
+#if !NET452
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 #endif
@@ -133,7 +133,7 @@ namespace Benchmarks.Framework
 
         private static string GetMachineName()
         {
-#if NET451
+#if NET452
             return Environment.MachineName;
 #else
             var config = new ConfigurationBuilder()

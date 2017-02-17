@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26208.0
+VisualStudioVersion = 15.0.26217.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{39290E57-4492-4F65-89D6-64C95DE73976}"
 EndProject
@@ -37,13 +37,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Model", "Model", "{5FA83898
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MultipartPOST", "MultipartPOST", "{4360A0FB-7357-4CB4-9B0F-ED71E71B1077}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNetCore.Tests.Performance", "test\Microsoft.AspNetCore.Tests.Performance\Microsoft.AspNetCore.Tests.Performance.csproj", "{76C8FD9D-615A-4741-8E03-A11F7C20A99F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Tests.Performance", "test\Microsoft.AspNetCore.Tests.Performance\Microsoft.AspNetCore.Tests.Performance.csproj", "{76C8FD9D-615A-4741-8E03-A11F7C20A99F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StarterMvc", "testapp\StarterMvc\StarterMvc.csproj", "{8397CB65-B60F-4881-B0A1-E881593A487C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks.Framework", "src\Benchmarks.Framework\Benchmarks.Framework.csproj", "{488D79ED-7138-4CCB-9A9F-458FA4A076A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microbenchmarks.Tests", "test\Microbenchmarks.Tests\Microbenchmarks.Tests.csproj", "{9B73D4A3-CA9D-4396-8000-F69E9B0EB9D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microbenchmarks.Tests", "test\Microbenchmarks.Tests\Microbenchmarks.Tests.csproj", "{9B73D4A3-CA9D-4396-8000-F69E9B0EB9D3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks.Utility", "src\Benchmarks.Utility\Benchmarks.Utility.csproj", "{65DCA477-590C-4453-B688-7BBD057B2C6F}"
 EndProject
@@ -51,7 +51,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PerformanceDashboard", "das
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stress.Framework", "src\Stress.Framework\Stress.Framework.csproj", "{0B2EC639-4697-4854-9512-122B1ACD6253}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.AspNetCore.Tests.Stress", "stress-test\Microsoft.AspNetCore.Tests.Stress\Microsoft.AspNetCore.Tests.Stress.csproj", "{67CEE842-1B97-4663-A509-1F18A86F9A5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Tests.Stress", "stress-test\Microsoft.AspNetCore.Tests.Stress\Microsoft.AspNetCore.Tests.Stress.csproj", "{67CEE842-1B97-4663-A509-1F18A86F9A5F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorldMvc", "testapp\HelloWorldMvc\HelloWorldMvc.csproj", "{E5D2EE3F-672A-41A5-9B0B-0A979E333920}"
 EndProject
@@ -81,7 +81,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalizedViews", "testapp\L
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorCodeGenerator", "testapp\RazorCodeGenerator\RazorCodeGenerator.csproj", "{0236230D-D34D-4546-9221-E5767F19ED9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp.Test", "test\TestApp.Test\TestApp.Test.csproj", "{82B767A5-1640-4561-9F04-2E90AD0BDEFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp.Test", "test\TestApp.Test\TestApp.Test.csproj", "{82B767A5-1640-4561-9F04-2E90AD0BDEFB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PooledKestrel", "testapp\PooledKestrel\PooledKestrel.csproj", "{F14C584D-3175-43B8-996F-59046629CD27}"
 EndProject

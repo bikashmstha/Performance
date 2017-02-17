@@ -9,11 +9,11 @@ using Benchmarks.Framework;
 using Benchmarks.Framework.BenchmarkPersistence;
 using Benchmarks.Utility.Azure;
 using Benchmarks.Utility.Helpers;
-#if !NET451
+#if !NET452
 using Microsoft.Extensions.Configuration;
 #endif
 using Microsoft.Extensions.Logging;
-#if !NET451
+#if !NET452
 using Microsoft.Extensions.PlatformAbstractions;
 #endif
 using Xunit;
@@ -221,7 +221,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
         private static string GetMachineName()
         {
-#if NET451
+#if NET452
             return Environment.MachineName;
 #else
             var config = new ConfigurationBuilder()

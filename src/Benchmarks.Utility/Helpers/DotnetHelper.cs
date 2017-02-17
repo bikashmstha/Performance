@@ -49,17 +49,19 @@ namespace Benchmarks.Utility.Helpers
 
         public bool Publish(string workingDir, string outputDir, string framework, bool useShellExecute = false)
         {
+            if (string.IsNullOrEmpty(framework))
+            {
+                // Provide required argument where multiple targets are supported.
+                // All test sites support .NET Core App on every platform.
+                framework = "netcoreapp1.1";
+            }
+
             var psi = new ProcessStartInfo(GetDotnetExecutable())
             {
-                Arguments = $"publish --output \"{outputDir}\"",
+                Arguments = $"publish --output \"{outputDir}\" --framework {framework}",
                 WorkingDirectory = workingDir,
                 UseShellExecute = useShellExecute
             };
-
-            if (!string.IsNullOrEmpty(framework))
-            {
-                psi.Arguments = $"{psi.Arguments} --framework {framework}";
-            }
 
             var proc = Process.Start(psi);
             var exited = proc.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds);

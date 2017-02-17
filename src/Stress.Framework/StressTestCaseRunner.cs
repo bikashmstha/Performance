@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-#if !NET451
+#if !NET452
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
 #endif
@@ -136,7 +136,7 @@ namespace Stress.Framework
 
         private static string GetMachineName()
         {
-#if NET451
+#if NET452
             return Environment.MachineName;
 #else
             var config = new ConfigurationBuilder()

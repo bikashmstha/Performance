@@ -53,11 +53,11 @@ namespace Microsoft.AspNetCore.Tests.Performance
         public void Production_DotNet_Startup(string sampleName)
         {
             var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
-            var appliationFramework = GetFrameworkName(framework);
+            var applicationFramework = GetFrameworkName(framework);
             var testName = $"{sampleName}.{framework}.{nameof(Production_DotNet_Startup)}";
             var logger = LogUtility.LoggerFactory.CreateLogger(testName);
 
-            var testProject = _sampleManager.GetDotNetPublishedSample(sampleName, appliationFramework);
+            var testProject = _sampleManager.GetDotNetPublishedSample(sampleName, applicationFramework);
             Assert.True(testProject != null, $"Fail to set up test project.");
             logger.LogInformation($"Test project is set up at {testProject}");
 

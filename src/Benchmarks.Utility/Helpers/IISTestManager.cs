@@ -1,7 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-#if NET451
+#if NET452
 
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ namespace Benchmarks.Utility.Helpers
     /// <summary>
     /// Test manager helps test cases to deploy a web project to IIS.
     ///
-    /// This class depends on IISDeployer of Microsoft.AspNetCore.Server.IntegrationTesting package which is NET451 only.
+    /// This class depends on IISDeployer of Microsoft.AspNetCore.Server.IntegrationTesting package which is NET452 only.
     /// https://github.com/aspnet/Hosting/tree/dev/src/Microsoft.AspNetCore.Server.IntegrationTesting
     /// </summary>
     public class IISTestManager : IDisposable
