@@ -1,0 +1,10 @@
+<Project>
+  <Target Name="_ResolveStressTestProjects">
+    <ItemGroup>
+      <ProjectsToTest Remove="@(ProjectsToTest)" />
+      <ProjectsToTest Include="$(RepositoryRoot)stress-test\*\*.csproj" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="StressTest" DependsOnTargets="_ResolveStressTestProjects;TestProjects" />
+</Project>
