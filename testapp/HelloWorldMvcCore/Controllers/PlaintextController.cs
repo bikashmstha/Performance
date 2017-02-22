@@ -12,6 +12,7 @@ namespace HelloWorldMvcCore
     {
         private static readonly byte[] _bytes = Encoding.UTF8.GetBytes("Hello, World!");
 
+        [HttpGet("Plaintext")]
         public Task Index()
         {
             Response.StatusCode = StatusCodes.Status200OK;

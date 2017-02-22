@@ -31,7 +31,7 @@ namespace HelloWorldMvcCore
                 }
             });
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc();
         }
 
         public static void Main(string[] args)
