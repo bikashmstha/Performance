@@ -35,7 +35,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [BenchmarkVariation("StarterMvc_DevelopmentScenario", "StarterMvc")]
         public void Development_Startup(string sampleName)
         {
-            var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
+            var framework = RuntimeEnvironment.RuntimeType;
             var testName = $"{sampleName}.{framework}.{nameof(Development_Startup)}";
             var logger = LogUtility.LoggerFactory.CreateLogger(testName);
 
@@ -52,8 +52,8 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [BenchmarkVariation("BasicKestrel_DotNet_ProductionScenario", "BasicKestrel")]
         public void Production_DotNet_Startup(string sampleName)
         {
-            var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
-            var applicationFramework = GetFrameworkName(framework);
+            var framework = RuntimeEnvironment.RuntimeType;
+            var applicationFramework = Runtimes.GetFrameworkName(framework);
             var testName = $"{sampleName}.{framework}.{nameof(Production_DotNet_Startup)}";
             var logger = LogUtility.LoggerFactory.CreateLogger(testName);
 
@@ -69,8 +69,8 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [BenchmarkVariation("BasicKestrel_DotNet_ProductionScenario", "BasicKestrel")]
         public void GracefulExit(string sampleName)
         {
-            var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
-            var appliationFramework = GetFrameworkName(framework);
+            var framework = RuntimeEnvironment.RuntimeType;
+            var appliationFramework = Runtimes.GetFrameworkName(framework);
             var testName = $"{sampleName}.{framework}.{nameof(GracefulExit)}";
             var logger = LogUtility.LoggerFactory.CreateLogger(testName);
 
@@ -89,7 +89,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
                 var responseRetrived = false;
                 using (var client = new HttpClient())
                 {
-                    for (int i = 0; i < _retry; ++i)
+                    for (var i = 0; i < _retry; ++i)
                     {
                         try
                         {
@@ -134,8 +134,8 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [BenchmarkVariation("BasicKestrel_DevelopmentScenario", "BasicKestrel")]
         public void Development_Update_Startup(string sampleName)
         {
-            var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
-            var testName = $"{sampleName}.{framework}.{nameof(Development_Startup)}";
+            var framework = RuntimeEnvironment.RuntimeType;
+            var testName = $"{sampleName}.{framework}.{nameof(Development_Update_Startup)}";
             var logger = LogUtility.LoggerFactory.CreateLogger(testName);
 
             var testProject = _sampleManager.GetRestoredSample(sampleName);
@@ -179,8 +179,8 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
         private ProcessStartInfo GetStartInfo(string testProject, string sampleName)
         {
-            string processPath = Path.Combine(testProject, $"{sampleName}.exe");
-            string processArguments = string.Empty;
+            var processPath = Path.Combine(testProject, $"{sampleName}.exe");
+            var processArguments = string.Empty;
             if (!File.Exists(processPath))
             {
                 processPath = DotnetHelper.GetDefaultInstance().GetDotnetExecutable();
@@ -196,20 +196,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
             };
         }
 
-        private static string GetFrameworkName(string runtimeType)
-        {
-            if (string.Equals(runtimeType, "clr", StringComparison.OrdinalIgnoreCase))
-            {
-                return "net451";
-            }
-            if (string.Equals(runtimeType, "coreclr", StringComparison.OrdinalIgnoreCase))
-            {
-                return "netcoreapp1.1";
-            }
-            Assert.False(true, $"Unknown framework {runtimeType}");
-            return null;
-        }
-
         private void RunStartup(int port, ILogger logger, ProcessStartInfo testAppStartInfo)
         {
             Task<HttpResponseMessage> webtask = null;
@@ -223,7 +209,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
                 using (Collector.StartCollection())
                 {
                     process = Process.Start(testAppStartInfo);
-                    for (int i = 0; i < _retry; ++i)
+                    for (var i = 0; i < _retry; ++i)
                     {
                         try
                         {

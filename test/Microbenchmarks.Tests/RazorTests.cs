@@ -4,28 +4,23 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
+using System.Linq;
 using System.Reflection;
 using Benchmarks.Framework;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using Microsoft.AspNetCore.Mvc.Razor.Internal;
-using Microsoft.AspNetCore.Razor;
-using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
+using Microsoft.AspNetCore.Mvc.Razor.Extensions;
 using Microsoft.AspNetCore.Razor.Evolution;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Razor;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.ObjectPool;
 using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.Extensions.Primitives;
 using Xunit;
-using SourceLocation = Microsoft.AspNetCore.Razor.SourceLocation;
-using TagHelperDescriptor = Microsoft.AspNetCore.Razor.Compilation.TagHelpers.TagHelperDescriptor;
-using TagHelperDescriptorResolver = Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperDescriptorResolver;
-using TagHelperDirectiveDescriptor = Microsoft.AspNetCore.Razor.Compilation.TagHelpers.TagHelperDirectiveDescriptor;
 
 namespace Microbenchmarks.Tests.Razor
 {
@@ -36,26 +31,18 @@ namespace Microbenchmarks.Tests.Razor
         [BenchmarkVariation("Design Time", true)]
         public void TagHelperResolution(bool designTime)
         {
-            var descriptorResolver = new TagHelperDescriptorResolver(designTime);
-            var errorSink = new ErrorSink();
-            var addTagHelperDirective = new TagHelperDirectiveDescriptor
-            {
-                DirectiveText = "*, Microsoft.AspNetCore.Mvc.TagHelpers",
-                DirectiveType = TagHelperDirectiveType.AddTagHelper,
-                Location = SourceLocation.Zero
-            };
-            var resolutionContext = new TagHelperDescriptorResolutionContext(
-                new[] { addTagHelperDirective },
-                errorSink);
-            IEnumerable<TagHelperDescriptor> descriptors;
+            // Arrange
+            var compilation = CreateCompilation();
 
+            // Act
+            IEnumerable<TagHelperDescriptor> descriptors;
             using (Collector.StartCollection())
             {
-                descriptors = descriptorResolver.Resolve(resolutionContext);
+                descriptors = TagHelpers.GetTagHelpers(compilation);
             }
 
+            // Assert
             Assert.NotEmpty(descriptors);
-            Assert.Empty(errorSink.Errors);
         }
 
         [Benchmark]
@@ -63,138 +50,74 @@ namespace Microbenchmarks.Tests.Razor
         public void ViewParsing(bool designTime)
         {
             // Arrange
-            var services = ConfigureDefaultServices(Directory.GetCurrentDirectory());
-            var compilationService = (RazorCompilationService)services.GetRequiredService<IRazorCompilationService>();
-
             var assembly = typeof(RazorTests).GetTypeInfo().Assembly;
-            var assemblyName = assembly.GetName().Name;
-            var stream = assembly.GetManifestResourceStream($"{assemblyName}.compiler.resources.RazorTests.TestFile.cshtml");
+            var services = ConfigureDefaultServices(assembly);
+            var razorEngine = services.GetRequiredService<RazorEngine>();
+            var razorProject = services.GetRequiredService<RazorProject>();
+            var templateEngine = new MvcRazorTemplateEngine(razorEngine, razorProject)
+            {
+                Options =
+                {
+                    ImportsFileName = "_ViewImports.cshtml",
+                },
+            };
 
-            var codeDocument = compilationService.CreateCodeDocument("test.cshtml", stream);
-
-            RazorCSharpDocument result;
+            var codeDocument = templateEngine.CreateCodeDocument("/compiler/resources/RazorTests.TestFile.cshtml");
 
             // Act
+            RazorCSharpDocument result;
             using (Collector.StartCollection())
             {
-                result = compilationService.ProcessCodeDocument(codeDocument);
+                result = templateEngine.GenerateCode(codeDocument);
             }
 
             // Assert
             Assert.Empty(result.Diagnostics);
         }
 
-        private static IServiceProvider ConfigureDefaultServices(string basePath)
+        private static Compilation CreateCompilation()
+        {
+            var currentAssembly = typeof(RazorTests).GetTypeInfo().Assembly;
+            var dependencyContext = DependencyContext.Load(currentAssembly);
+
+            // Performance is expected to decrease as MVC or this project add tag helpers or dependencies
+            // containing tag helpers. Would narrow graph to Microsoft.AspNet.Mvc.TagHelpers and its
+            // dependencies if that were easier.
+            var references = dependencyContext.CompileLibraries
+                .SelectMany(library => library.ResolveReferencePaths())
+                .Select(referencePath => MetadataReference.CreateFromFile(referencePath));
+
+            return CSharpCompilation.Create("TestAssembly", references: references);
+        }
+
+        private static IServiceProvider ConfigureDefaultServices(Assembly assembly)
         {
             var services = new ServiceCollection();
 
             var applicationEnvironment = PlatformServices.Default.Application;
-            services.AddSingleton(PlatformServices.Default.Application);
+            services.AddSingleton(applicationEnvironment);
+
+            var assemblyName = assembly.GetName().Name;
+            var fileProvider = new EmbeddedFileProvider(assembly, assemblyName);
             services.AddSingleton<IHostingEnvironment>(new HostingEnvironment
             {
                 ApplicationName = "Microbenchmarks.Tests",
-                WebRootFileProvider = new PhysicalFileProvider(basePath)
+                WebRootFileProvider = fileProvider,
             });
+
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.FileProviders.Clear();
-                options.FileProviders.Add(new PhysicalFileProvider(basePath));
+                options.FileProviders.Add(fileProvider);
             });
+
             var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
             services.AddSingleton<DiagnosticSource>(diagnosticSource);
             services.AddLogging();
             services.AddMvc();
-
             services.AddSingleton<ObjectPoolProvider>(new DefaultObjectPoolProvider());
 
             return services.BuildServiceProvider();
-        }
-
-        private class TestFileProvider : IFileProvider
-        {
-            public virtual IDirectoryContents GetDirectoryContents(string subpath)
-            {
-                throw new NotSupportedException();
-            }
-
-            public virtual IFileInfo GetFileInfo(string subpath)
-            {
-                return new NotFoundFileInfo();
-            }
-
-            public virtual IChangeToken Watch(string filter)
-            {
-                return new TestFileChangeToken();
-            }
-
-            private class NotFoundFileInfo : IFileInfo
-            {
-                public bool Exists => false;
-
-                public bool IsDirectory
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-
-                public DateTimeOffset LastModified
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-
-                public long Length
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-
-                public string Name
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-
-                public string PhysicalPath
-                {
-                    get
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-
-                public Stream CreateReadStream()
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            private class TestFileChangeToken : IChangeToken
-            {
-                public bool ActiveChangeCallbacks => false;
-
-                public bool HasChanged { get; set; }
-
-                public IDisposable RegisterChangeCallback(Action<object> callback, object state)
-                {
-                    return new NullDisposable();
-                }
-
-                private class NullDisposable : IDisposable
-                {
-                    public void Dispose()
-                    {
-                    }
-                }
-            }
         }
     }
 }

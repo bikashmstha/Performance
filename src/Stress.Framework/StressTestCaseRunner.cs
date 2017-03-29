@@ -7,8 +7,11 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-#if !NET452
+#if NETCOREAPP2_0
 using Microsoft.Extensions.Configuration;
+#endif
+using Microsoft.Extensions.Internal;
+#if NETCOREAPP2_0
 using Microsoft.Extensions.PlatformAbstractions;
 #endif
 using Xunit.Abstractions;
@@ -55,7 +58,6 @@ namespace Stress.Framework
                 TestClassFullName = TestCase.TestMethod.TestClass.Class.Name,
                 TestClass = TestCase.TestMethod.TestClass.Class.Name.Split('.').Last(),
                 TestMethod = TestCase.TestMethodName,
-                Variation = TestCase.Variation,
                 RunStarted = DateTime.UtcNow,
                 MachineName = _machineName,
                 Framework = _framework,
@@ -131,20 +133,22 @@ namespace Stress.Framework
 
         private static string GetFramework()
         {
-            return "DNX." + Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
+            return "DNX." + RuntimeEnvironment.RuntimeType;
         }
 
         private static string GetMachineName()
         {
-#if NET452
+#if NET46
             return Environment.MachineName;
-#else
+#elif NETCOREAPP2_0
             var config = new ConfigurationBuilder()
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddEnvironmentVariables()
                 .Build();
 
             return config["computerName"];
+#else
+#error The target frameworks need to be updated
 #endif
         }
 

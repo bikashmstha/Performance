@@ -9,11 +9,11 @@ using Benchmarks.Framework;
 using Benchmarks.Framework.BenchmarkPersistence;
 using Benchmarks.Utility.Azure;
 using Benchmarks.Utility.Helpers;
-#if !NET452
+#if NETCOREAPP2_0
 using Microsoft.Extensions.Configuration;
 #endif
 using Microsoft.Extensions.Logging;
-#if !NET452
+#if NETCOREAPP2_0
 using Microsoft.Extensions.PlatformAbstractions;
 #endif
 using Xunit;
@@ -67,7 +67,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
             }
         }
 
-        [Theory(Skip = "Reqire azure subscription on test machine")]
+        [Theory(Skip = "Requires azure subscription on test machine")]
         [InlineData("StarterMvc", "clr")]
         [InlineData("StarterMvc", "coreclr")]
         public void PublishAndRun(string sampleName, string framework)
@@ -221,15 +221,17 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
         private static string GetMachineName()
         {
-#if NET452
+#if NET46
             return Environment.MachineName;
-#else
+#elif NETCOREAPP2_0
             var config = new ConfigurationBuilder()
                 .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
                 .AddEnvironmentVariables()
                 .Build();
 
             return config["computerName"];
+#else
+#error The target frameworks need to be updated
 #endif
         }
     }

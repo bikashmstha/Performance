@@ -4,6 +4,7 @@
 using System.IO;
 using Benchmarks.Framework;
 using Benchmarks.Utility.Helpers;
+using Microsoft.Extensions.Internal;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Performance
@@ -22,10 +23,10 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [BenchmarkVariation("DotnetPublish_StarterMvc", "StarterMvc")]
         public void DotnetPublish(string sampleName)
         {
-            var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
+            var framework = RuntimeEnvironment.RuntimeType;
             var testName = $"{sampleName}.{framework}.{nameof(DotnetPublish)}";
             var testProject = _sampleManager.GetRestoredSample(sampleName);
-            Assert.True(testProject != null, $"Fail to set up test project.");
+            Assert.True(testProject != null, "Failed to set up test project.");
 
             var testOutput = Path.Combine(PathHelper.GetNewTempFolder(), testName);
             Directory.CreateDirectory(testOutput);
@@ -35,6 +36,15 @@ namespace Microsoft.AspNetCore.Tests.Performance
                 DotnetHelper.GetDefaultInstance().Publish(
                     workingDir: testProject,
                     outputDir: testOutput);
+            }
+
+            try
+            {
+                Directory.Delete(testOutput, recursive: true);
+            }
+            catch (IOException)
+            {
+                // Ignore problems deleting the publish target directory.
             }
         }
     }

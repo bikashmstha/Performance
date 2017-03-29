@@ -10,7 +10,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Benchmarks.Utility.Helpers
 {
-    public class SampleManager
+    public class SampleManager : IDisposable
     {
         private readonly Dictionary<Type, List<SampleEntry>> _samples = new Dictionary<Type, List<SampleEntry>>();
 
@@ -28,10 +28,30 @@ namespace Benchmarks.Utility.Helpers
             return sample.Valid ? sample.SamplePath : null;
         }
 
+        public void Dispose()
+        {
+            foreach (var list in _samples.Values)
+            {
+                foreach (var sample in list)
+                {
+                    if (sample.TemporaryPath != null && Directory.Exists(sample.TemporaryPath))
+                    {
+                        try
+                        {
+                            Directory.Delete(sample.TemporaryPath, recursive: true);
+                        }
+                        catch (IOException)
+                        {
+                            // Ignore cleanup errors.
+                        }
+                    }
+                }
+            }
+        }
+
         private SampleEntry GetOrAdd<T>(string name, Func<string, T> factory) where T : SampleEntry
         {
-            List<SampleEntry> samples;
-            if (!_samples.TryGetValue(typeof(T), out samples))
+            if (!_samples.TryGetValue(typeof(T), out var samples))
             {
                 samples = new List<SampleEntry>();
                 _samples[typeof(T)] = samples;
@@ -62,6 +82,9 @@ namespace Benchmarks.Utility.Helpers
 
             public string SamplePath { get; protected set; }
 
+            // Temporary folder containing SamplePath.
+            public string TemporaryPath { get; protected set; }
+
             public bool Valid => SamplePath != null && Directory.Exists(SamplePath);
 
             public void Initialize()
@@ -90,7 +113,7 @@ namespace Benchmarks.Utility.Helpers
                 const int maxRelativeFolderTraversalDepth = 10; // how many ".." will we attempt adding looking for NuGet.config?
                 var appbase = PlatformServices.Default.Application.ApplicationBasePath;
                 var relativePath = nugetConfigFileName;
-                for (int i = 1; i < maxRelativeFolderTraversalDepth; i++)
+                for (var i = 1; i < maxRelativeFolderTraversalDepth; i++)
                 {
                     var currentTry = Path.GetFullPath(Path.Combine(appbase, relativePath));
                     if (File.Exists(currentTry))
@@ -118,30 +141,30 @@ namespace Benchmarks.Utility.Helpers
                     return false;
                 }
 
-                var tempFolder = PathHelper.GetNewTempFolder();
-                Directory.CreateDirectory(tempFolder); // workaround for Linux
-                var target = Path.Combine(tempFolder, "app", Name);
+                TemporaryPath = PathHelper.GetNewTempFolder();
+                Directory.CreateDirectory(TemporaryPath); // workaround for Linux
+                var target = Path.Combine(TemporaryPath, "app", Name);
                 Directory.CreateDirectory(target);
-                var buildTarget = Path.Combine(tempFolder, "build");
+                var buildTarget = Path.Combine(TemporaryPath, "build");
 
                 string copyCommand, copyBuildParameters, copyNugetConfigParameters, copyPropsParameters, copySampleParameters;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     copyCommand = "robocopy";
-                    copyBuildParameters = $"\"{_buildFolder}\" \"{buildTarget}\" /NP /S";
-                    copyNugetConfigParameters = $"\"{_pathToNugetConfig}\" \"{target}\" NuGet.config /NP";
-                    copyPropsParameters = $"\"{_rootFolder}\" \"{tempFolder}\" *.props *.targets /NP";
-                    copySampleParameters = $"\"{SourcePath}\" \"{target}\" /NP /S /XD bin node_modules obj /XF project.lock.json";
+                    copyBuildParameters = $"\"{_buildFolder}\" \"{buildTarget}\" /S /NC /NP /NJS /NS";
+                    copyNugetConfigParameters = $"\"{_pathToNugetConfig}\" \"{TemporaryPath}\" NuGet.config /NC /NP /NJS /NS";
+                    copyPropsParameters = $"\"{_rootFolder}\" \"{TemporaryPath}\" *.json *.props *.targets /NC /NP /NJS /NS";
+                    copySampleParameters = $"\"{SourcePath}\" \"{target}\" /S /XD bin node_modules obj /NC /NP /NJS /NS";
                 }
                 else
                 {
                     copyCommand = "rsync";
                     copyBuildParameters = $"\"{_buildFolder}/\"*.* \"{buildTarget}\"";
-                    copyNugetConfigParameters = $"\"{_pathToNugetConfig}/NuGet.config\" \"{target}/NuGet.config\"";
-                    copyPropsParameters = "--include=*.props --include=*.targets --exclude=*.* " +
-                        $"\"{_rootFolder}/\"*.* \"{tempFolder}\"";
+                    copyNugetConfigParameters = $"\"{_pathToNugetConfig}/NuGet.config\" \"{TemporaryPath}/NuGet.config\"";
+                    copyPropsParameters = "--include=*.json --include=*.props --include=*.targets --exclude=*.* " +
+                        $"\"{_rootFolder}/\"*.* \"{TemporaryPath}\"";
                     copySampleParameters = "--recursive --exclude=bin/ --exclude=node_modules/ --exclude=obj/ " +
-                        $"--exclude=project.lock.json \"{SourcePath}/\" \"{target}/\"";
+                        $"\"{SourcePath}/\" \"{target}/\"";
                 }
 
                 var runner = new CommandLineRunner(copyCommand);
@@ -158,11 +181,19 @@ namespace Benchmarks.Utility.Helpers
                 runner.Execute(copySampleParameters);
                 if (!DotnetHelper.GetDefaultInstance().Restore(target, quiet: true))
                 {
-                    Directory.Delete(target, recursive: true);
+                    try
+                    {
+                        Directory.Delete(target, recursive: true);
+                    }
+                    catch (IOException)
+                    {
+                    }
+
                     return false;
                 }
 
                 SamplePath = target;
+
                 return true;
             }
         }
@@ -192,16 +223,25 @@ namespace Benchmarks.Utility.Helpers
                     return false;
                 }
 
-                var target = Path.Combine(PathHelper.GetNewTempFolder(), parts[0]);
+                TemporaryPath = PathHelper.GetNewTempFolder();
+                var target = Path.Combine(TemporaryPath, parts[0]);
                 Directory.CreateDirectory(target);
 
                 if (!dotnet.Publish(SourcePath, target, parts[1]))
                 {
-                    Directory.Delete(target, recursive: true);
+                    try
+                    {
+                        Directory.Delete(target, recursive: true);
+                    }
+                    catch (IOException)
+                    {
+                    }
+
                     return false;
                 }
 
                 SamplePath = target;
+
                 return true;
             }
         }

@@ -6,7 +6,7 @@ using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Server.Kestrel;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +28,7 @@ namespace MultipartPost
             services.Configure<KestrelServerOptions>(options =>
             {
                 options.Limits.MaxRequestLineSize = 1 * (int)OneKilobyte;
+                options.Limits.MaxRequestHeadersTotalSize = 4 * (int)OneKilobyte; // 32k default but must be <= MaxRequestBufferSize
                 options.Limits.MaxRequestBufferSize = 4 * OneKilobyte; //let's customize the max buffer size per request
             });
             services.AddMvc();

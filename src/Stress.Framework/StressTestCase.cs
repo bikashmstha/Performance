@@ -23,20 +23,11 @@ namespace Stress.Framework
             string testApplicationName,
             long iterations,
             int clients,
-            string variation,
             ServerType serverType,
             IMethodInfo warmupMethod,
             IMessageSink diagnosticMessageSink,
-            ITestMethod testMethod,
-            object[] testMethodArguments)
-            : base(
-            testApplicationName,
-            variation,
-            serverType,
-            warmupMethod,
-            diagnosticMessageSink,
-            testMethod,
-            testMethodArguments)
+            ITestMethod testMethod)
+            : base(testApplicationName, serverType, warmupMethod, diagnosticMessageSink, testMethod)
         {
             Clients = clients;
             Iterations = iterations;

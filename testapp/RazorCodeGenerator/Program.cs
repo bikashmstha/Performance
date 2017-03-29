@@ -5,12 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.Compilation;
-using Microsoft.AspNetCore.Mvc.Razor.Internal;
+using Microsoft.AspNetCore.Mvc.Razor.Extensions;
+using Microsoft.AspNetCore.Razor.Evolution;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -135,12 +134,21 @@ namespace RazorCodeGenerator
 
             var services = ConfigureDefaultServices(basePath);
             ViewEngine = services.GetRequiredService<IRazorViewEngine>();
-            CompilationService = (RazorCompilationService)services.GetRequiredService<IRazorCompilationService>();
+
+            var razorEngine = services.GetRequiredService<RazorEngine>();
+            var razorProject = services.GetRequiredService<RazorProject>();
+            TemplateEngine = new MvcRazorTemplateEngine(razorEngine, razorProject)
+            {
+                Options =
+                {
+                    ImportsFileName = "_ViewImports.cshtml",
+                },
+            };
         }
 
         private string BasePath { get; }
 
-        private RazorCompilationService CompilationService { get; }
+        private MvcRazorTemplateEngine TemplateEngine { get; }
 
         private IRazorViewEngine ViewEngine { get; }
 
@@ -197,7 +205,6 @@ namespace RazorCodeGenerator
                 for (var i = 0; i < sources.Count; i++)
                 {
                     var source = sources[i];
-
                     var relativePath = source.Substring(BasePath.Length).Replace('\\', '/');
 
                     Console.WriteLine($"Creating view {relativePath}");
@@ -220,42 +227,33 @@ namespace RazorCodeGenerator
                 for (var i = 0; i < sources.Count; i++)
                 {
                     var source = sources[i];
-                    var relativePath = source.Substring(BasePath.Length);
-                    var fileNameNoExtension = Path.GetFileNameWithoutExtension(source);
+                    var relativePath = source.Substring(BasePath.Length).Replace('\\', '/');
+                    var codeDocument = TemplateEngine.CreateCodeDocument(relativePath);
 
                     Console.WriteLine($"Generating {source}");
 
-                    using (var stream = new FileStream(source, FileMode.Open))
+                    for (var j = 0; j < iterations; j++)
                     {
-                        for (var j = 0; j < iterations; j++)
+                        var cSharpDocument = TemplateEngine.GenerateCode(codeDocument);
+                        if (cSharpDocument.Diagnostics.Count > 0)
                         {
-                            var codeDocument = CompilationService.CreateCodeDocument(relativePath, stream);
-                            var result = CompilationService.ProcessCodeDocument(codeDocument);
-                            if (result.Diagnostics.Count > 0)
-                            {
-                                Console.WriteLine($"Code generation failed for {source}");
-                                foreach (var error in result.GeneratedCode)
-                                {
-                                    Console.WriteLine("\t" + error);
-                                }
+                            Console.WriteLine($"Code generation failed for {source}");
+                            Console.WriteLine("\t" + cSharpDocument.GeneratedCode);
 
-                                return false;
-                            }
-
-                            if (j > 0 && j % 10 == 0)
-                            {
-                                Console.WriteLine($"Completed iteration {j}");
-                            }
-
-                            if (dump && j == iterations - 1)
-                            {
-                                var output = Path.ChangeExtension(source, ".cs");
-                                Console.WriteLine($"Dumping generated code to {output}");
-                                File.WriteAllText(output, result.GeneratedCode);
-                            }
+                            return false;
                         }
 
-                        stream.Seek(0L, SeekOrigin.Begin);
+                        if (j > 0 && j % 10 == 0)
+                        {
+                            Console.WriteLine($"Completed iteration {j}");
+                        }
+
+                        if (dump && j == iterations - 1)
+                        {
+                            var output = Path.ChangeExtension(source, ".cs");
+                            Console.WriteLine($"Dumping generated code to {output}");
+                            File.WriteAllText(output, cSharpDocument.GeneratedCode);
+                        }
                     }
                 }
             }
@@ -268,46 +266,27 @@ namespace RazorCodeGenerator
             var services = new ServiceCollection();
 
             var applicationEnvironment = PlatformServices.Default.Application;
-            services.AddSingleton(PlatformServices.Default.Application);
+            services.AddSingleton(applicationEnvironment);
+
             services.AddSingleton<IHostingEnvironment>(new HostingEnvironment
             {
                 ApplicationName = "RazorCodeGenerator",
                 WebRootFileProvider = new PhysicalFileProvider(basePath)
             });
+
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 options.FileProviders.Clear();
                 options.FileProviders.Add(new PhysicalFileProvider(basePath));
             });
+
             var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
             services.AddSingleton<DiagnosticSource>(diagnosticSource);
             services.AddLogging();
             services.AddMvc();
-
             services.AddSingleton<ObjectPoolProvider>(new DefaultObjectPoolProvider());
 
             return services.BuildServiceProvider();
-        }
-
-        private static string ManglePath(string basePath, string path)
-        {
-            if (!path.StartsWith(basePath))
-            {
-                return "Test";
-            }
-
-            var projectName = Path.GetFileName(basePath);
-
-            var @namespace = new StringBuilder(projectName);
-
-            var tokens = path.Substring(basePath.Length).Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var token in tokens)
-            {
-                @namespace.Append('.');
-                @namespace.Append(token);
-            }
-
-            return @namespace.ToString();
         }
     }
 }

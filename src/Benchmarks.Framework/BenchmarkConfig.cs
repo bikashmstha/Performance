@@ -27,7 +27,8 @@ namespace Benchmarks.Framework
                     ResultDatabases = resultDatabasesSection.GetChildren().Select(s => s.Value).ToList(),
                     BenchmarkDatabaseInstance = config["Benchmarks:BenchmarkDatabaseInstance"],
                     ProductReportingVersion = config["Benchmarks:ProductReportingVersion"],
-                    CustomData = config["Benchmarks:CustomData"]
+                    CustomData = config["Benchmarks:CustomData"],
+                    DeployerLogging = bool.Parse(config["Benchmarks:DeployerLogging"] ?? "true"),
                 };
             });
 
@@ -38,9 +39,15 @@ namespace Benchmarks.Framework
         public static BenchmarkConfig Instance =>_instance.Value;
 
         public bool RunIterations { get; private set; }
+
         public IEnumerable<string> ResultDatabases { get; private set; }
+
         public string BenchmarkDatabaseInstance { get; private set; }
+
         public string ProductReportingVersion { get; private set; }
+
         public string CustomData { get; private set; }
+
+        public bool DeployerLogging { get; private set; }
     }
 }

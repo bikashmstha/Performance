@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using Benchmarks.Utility.Helpers;
 using Benchmarks.Utility.Logging;
 using Microsoft.AspNetCore.Server.IntegrationTesting;
+using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Stress.Framework
 {
@@ -39,7 +41,7 @@ namespace Stress.Framework
 
         public async Task<StressTestServerStartResult> StartAsync()
         {
-            var framework = Microsoft.Extensions.Internal.RuntimeEnvironment.RuntimeType;
+            var framework = RuntimeEnvironment.RuntimeType;
             var fullTestName = $"{_testMethodName}.{_testName}.{framework}";
             fullTestName = fullTestName.Replace('_', '.');
 
@@ -47,22 +49,20 @@ namespace Stress.Framework
 
             var baseAddress = $"http://localhost:{_port}/";
 
-            var p = new DeploymentParameters(PathHelper.GetTestAppFolder(_testName), _serverType, RuntimeFlavor.Clr, RuntimeArchitecture.x64)
+            var p = new DeploymentParameters(
+                PathHelper.GetTestAppFolder(_testName),
+                _serverType,
+                Runtimes.GetRuntimeFlavor(framework),
+                RuntimeArchitecture.x64)
             {
                 SiteName = _testName,
                 ApplicationBaseUriHint = baseAddress,
-                TargetFramework = "net451"
+                TargetFramework = Runtimes.GetFrameworkName(framework),
             };
 
-            ILogger deployerLogger;
-            if (StressConfig.Instance.DeployerLogging)
-            {
-                deployerLogger = _logger;
-            }
-            else
-            {
-                deployerLogger = new NullLogger();
-            }
+            var deployerLogger = StressConfig.Instance.DeployerLogging ?
+                _logger :
+                NullLoggerFactory.Instance.CreateLogger(fullTestName);
 
             _applicationDeployer = ApplicationDeployerFactory.Create(p, deployerLogger);
             var deploymentResult = _applicationDeployer.Deploy();
@@ -80,7 +80,7 @@ namespace Stress.Framework
             };
 
             HttpResponseMessage response = null;
-            for (int i = 0; i < 20; ++i)
+            for (var i = 0; i < 20; ++i)
             {
                 try
                 {
@@ -147,23 +147,6 @@ namespace Stress.Framework
                     _metricCollector.NewRequest();
                     return base.SendAsync(request, cancellationToken);
                 }
-            }
-        }
-
-        private class NullLogger : ILogger
-        {
-            public IDisposable BeginScope<TState>(TState state)
-            {
-                return null;
-            }
-
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return false;
-            }
-
-            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-            {
             }
         }
     }

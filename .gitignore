@@ -37,3 +37,4 @@ nuget.exe
 *launchSettings.json
 .build/
 .testPublish/
+global.json

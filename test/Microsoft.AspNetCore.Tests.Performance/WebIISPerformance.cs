@@ -1,21 +1,21 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-#if NET452
-
 using System;
 using System.Net.Http;
 using Benchmarks.Framework;
 using Benchmarks.Utility.Helpers;
+using Benchmarks.Utility.Logging;
 using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Microsoft.AspNetCore.Testing.xunit;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Performance
 {
     /// <summary>
-    /// This test relies on Microsoft.AspNetCore.
+    /// This test relies on Microsoft.AspNetCore and IIS Express.
     /// </summary>
     public class WebIISPerformance : IBenchmarkTest, IClassFixture<IISTestManager>
     {
@@ -24,18 +24,18 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
         public WebIISPerformance(IISTestManager testManager)
         {
-            _loggerFactory = new LoggerFactory();
-            _loggerFactory.AddConsole();
-
+            _loggerFactory = LogUtility.LoggerFactory;
             _testManager = testManager;
-            _testManager.Initialize(_loggerFactory);
+
+            var deployerLogger = BenchmarkConfig.Instance.DeployerLogging ? _loggerFactory : NullLoggerFactory.Instance;
+            _testManager.Initialize(deployerLogger);
         }
 
         public IMetricCollector Collector { get; set; } = new NullMetricCollector();
 
         [OSSkipCondition(OperatingSystems.Linux)]
         [OSSkipCondition(OperatingSystems.MacOSX)]
-        [Benchmark(Iterations = 1, WarmupIterations = 0, Skip = "ApplicationDeployer.DotnetPublish fails on deployment")]
+        [Benchmark(Iterations = 1, WarmupIterations = 0, Skip = "Requires optional IIS Express enabled on test machine")]
         [BenchmarkVariation("StarterMvc_IISScenario", "StarterMvc", RuntimeFlavor.Clr, Framework = "DNX.Clr")]
         [BenchmarkVariation("StarterMvc_IISScenario", "StarterMvc", RuntimeFlavor.CoreClr, Framework = "DNX.CoreClr")]
         public void Startup(string sampleName, RuntimeFlavor runtimeFlavor)
@@ -57,5 +57,3 @@ namespace Microsoft.AspNetCore.Tests.Performance
         }
     }
 }
-
-#endif

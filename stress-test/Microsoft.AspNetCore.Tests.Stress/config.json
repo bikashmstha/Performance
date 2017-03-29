@@ -1,5 +1,6 @@
 ﻿{
   "Stress": {
+    "DeployerLogging": false,
     "RunIterations": false,
     "Iterations": 1000,
     "MetricReportInterval": 5

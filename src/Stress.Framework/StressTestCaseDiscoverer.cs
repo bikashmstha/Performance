@@ -2,86 +2,64 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Benchmarks.Framework;
 using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace Stress.Framework
 {
-    public class StressTestCaseDiscoverer : IXunitTestCaseDiscoverer
+    public class StressTestCaseDiscoverer : FactDiscoverer
     {
         private static readonly string StressTestBaseName = new ReflectionTypeInfo(typeof(StressTestBase)).Name;
         private readonly IMessageSink _diagnosticMessageSink;
 
         public StressTestCaseDiscoverer(IMessageSink diagnosticMessageSink)
+            : base(diagnosticMessageSink)
         {
             _diagnosticMessageSink = diagnosticMessageSink;
         }
 
-        public virtual IEnumerable<IXunitTestCase> Discover(
+        protected override IXunitTestCase CreateTestCase(
             ITestFrameworkDiscoveryOptions discoveryOptions,
             ITestMethod testMethod,
             IAttributeInfo factAttribute)
         {
             if (!IsStressTestBase(testMethod.TestClass.Class))
             {
-                _diagnosticMessageSink.OnMessage(
-                    new DiagnosticMessage(
-                        $"Could not resolve stress test because its parent class did not inherit from {testMethod.TestClass.Class.Name}."));
-                return Enumerable.Empty<IXunitTestCase>();
+                return new ExecutionErrorTestCase(
+                    _diagnosticMessageSink,
+                    discoveryOptions.MethodDisplayOrDefault(),
+                    testMethod,
+                    $"Could not resolve stress test because its parent class did not inherit from {testMethod.TestClass.Class.Name}.");
             }
 
-            var variations = testMethod.Method
-                .GetCustomAttributes(typeof(StressVariationAttribute))
-                .Select(a => new
-                {
-                    Name = a.GetNamedArgument<string>(nameof(StressVariationAttribute.VariationName)),
-                    TestMethodArguments = a.GetNamedArgument<object[]>(nameof(StressVariationAttribute.Data))
-                })
-                .ToList();
-
-            if (!variations.Any())
+            var skipReason = testMethod.EvaluateSkipConditions();
+            if (skipReason != null)
             {
-                variations.Add(new
-                {
-                    Name = "Default",
-                    TestMethodArguments = new object[0]
-                });
-            }
-            var servers = factAttribute.GetNamedArgument<ServerType[]>(nameof(StressAttribute.Servers));
-
-            var tests = new List<IXunitTestCase>();
-            foreach (var serverType in servers)
-            {
-                foreach (var variation in variations)
-                {
-                    var warmupMethod = ResolveWarmupMethod(testMethod, factAttribute);
-                    var iterations = StressConfig.Instance.RunIterations ? factAttribute.GetNamedArgument<long>(nameof(StressAttribute.Iterations)) : 1;
-                    var threads = factAttribute.GetNamedArgument<int>(nameof(StressAttribute.Clients));
-
-                    var variationName = variation.Name;
-                    if (servers.Length > 1)
-                    {
-                        variationName = variationName + "_" + serverType;
-                    }
-
-                    tests.Add(new StressTestCase(
-                        factAttribute.GetNamedArgument<string>(nameof(StressAttribute.TestApplicationName)),
-                        iterations,
-                        threads,
-                        variationName,
-                        serverType,
-                        warmupMethod,
-                        _diagnosticMessageSink,
-                        testMethod,
-                        variation.TestMethodArguments));
-                }
-
+                return new SkippedTestCase(
+                    skipReason,
+                    _diagnosticMessageSink,
+                    discoveryOptions.MethodDisplayOrDefault(),
+                    testMethod);
             }
 
-            return tests;
+            var testApplicationName = factAttribute.GetNamedArgument<string>(nameof(StressAttribute.TestApplicationName));
+            var iterations = StressConfig.Instance.RunIterations ?
+                factAttribute.GetNamedArgument<long>(nameof(StressAttribute.Iterations)) :
+                1;
+            var threads = factAttribute.GetNamedArgument<int>(nameof(StressAttribute.Clients));
+            var serverType = factAttribute.GetNamedArgument<ServerType>(nameof(StressAttribute.Server));
+            var warmupMethod = ResolveWarmupMethod(testMethod, factAttribute);
+
+            return new StressTestCase(
+                testApplicationName,
+                iterations,
+                threads,
+                serverType,
+                warmupMethod,
+                _diagnosticMessageSink,
+                testMethod);
         }
 
         private static IMethodInfo ResolveWarmupMethod(ITestMethod testMethod, IAttributeInfo factAttribute)

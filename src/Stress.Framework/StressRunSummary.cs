@@ -13,7 +13,6 @@ namespace Stress.Framework
         public string TestClassFullName { get; set; }
         public string TestClass { get; set; }
         public string TestMethod { get; set; }
-        public string Variation { get; set; }
         public string MachineName { get; set; }
         public string Framework { get; set; }
         public string Architecture { get; set; }
@@ -56,7 +55,7 @@ namespace Stress.Framework
 
         public override string ToString()
         {
-            return $@"{TestClass}.{TestMethod} (Variation={Variation})
+            return $@"{TestClass}.{TestMethod}
     Run Iterations: {Iterations}
     Time Elapsed: {TimeElapsed}s
     Memory Delta: {MemoryDelta}";

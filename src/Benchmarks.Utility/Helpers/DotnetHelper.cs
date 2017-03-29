@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Microsoft.Extensions.Internal;
 
 namespace Benchmarks.Utility.Helpers
 {
@@ -51,9 +52,10 @@ namespace Benchmarks.Utility.Helpers
         {
             if (string.IsNullOrEmpty(framework))
             {
-                // Provide required argument where multiple targets are supported.
-                // All test sites support .NET Core App on every platform.
-                framework = "netcoreapp1.1";
+                // Provide required argument where multiple targets are supported. Use same framework as the running
+                // test because all test sites support .NET Core App and .NET Framework. Test itself won't run under
+                // .NET Framework unless on Windows.
+                framework = Runtimes.GetFrameworkName(RuntimeEnvironment.RuntimeType);
             }
 
             var psi = new ProcessStartInfo(GetDotnetExecutable())

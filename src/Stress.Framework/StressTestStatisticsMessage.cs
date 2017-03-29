@@ -8,14 +8,15 @@ namespace Stress.Framework
 {
     public class StressTestStatisticsMessage : TestCaseMessage, ITestStatisticsMessage
     {
-        public StressTestStatisticsMessage(ITestCase testCase, string key, object value) : base(testCase)
+        public StressTestStatisticsMessage(ITestCase testCase, string key, object value)
+            : base(testCase)
         {
             Key = key;
             Value = value;
         }
 
-        public string Key { get; }
+        public string Key { get; private set; }
 
-        public object Value { get; }
+        public object Value { get; private set; }
     }
 }

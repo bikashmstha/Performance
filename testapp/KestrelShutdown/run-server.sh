@@ -3,5 +3,5 @@
 dotnet build
 while true
 do
-  dotnet run --framework netcoreapp1.1
+  dotnet run --framework netcoreapp2.0
 done

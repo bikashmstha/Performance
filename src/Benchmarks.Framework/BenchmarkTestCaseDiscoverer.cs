@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Testing.xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -27,13 +26,17 @@ namespace Benchmarks.Framework
         {
             try
             {
-                var skipReason = EvaluateSkipConditions(testMethod);
-
+                var skipReason = testMethod.EvaluateSkipConditions();
                 if (skipReason != null)
                 {
-                    _diagnosticMessageSink.OnMessage(
-                        new DiagnosticMessage($"Skipping { testMethod.Method.Name }{ Environment.NewLine }Reason: { skipReason }"));
-                    return new List<IXunitTestCase>();
+                    return new[]
+                    {
+                        new SkippedTestCase(
+                            skipReason,
+                            _diagnosticMessageSink,
+                            discoveryOptions.MethodDisplayOrDefault(),
+                            testMethod),
+                    };
                 }
 
                 var variations = testMethod.Method
@@ -88,19 +91,6 @@ namespace Benchmarks.Framework
                 Console.WriteLine(e.StackTrace);
                 throw;
             }
-        }
-
-        private string EvaluateSkipConditions(ITestMethod testMethod)
-        {
-            return
-                testMethod.Method
-                .GetCustomAttributes(typeof(ITestCondition))
-                .OfType<ReflectionAttributeInfo>()
-                .Select(attributeInfo => attributeInfo.Attribute)
-                .OfType<ITestCondition>()
-                .Where(condition => !condition.IsMet)
-                .Select(condition => condition.SkipReason)
-                .FirstOrDefault();
         }
     }
 }
