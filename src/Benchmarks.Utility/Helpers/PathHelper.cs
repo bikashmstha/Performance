@@ -8,9 +8,7 @@ namespace Benchmarks.Utility.Helpers
 {
     public class PathHelper
     {
-        private static readonly string ArtifactFolder = "artifacts";
         private static readonly string TestAppFolder = "testapp";
-        private static readonly string ScriptFolder = "scripts";
         private static readonly string RootFileName = "build.sh";
 
         public static string GetRootFolder(string projectFolder)
@@ -51,34 +49,6 @@ namespace Benchmarks.Utility.Helpers
             {
                 return null;
             }
-        }
-
-        public static string GetScript(string scriptName)
-        {
-            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
-            var script = Path.Combine(rootFolder, ScriptFolder, scriptName);
-
-            if (File.Exists(script))
-            {
-                return script;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static string GetArtifactFolder()
-        {
-            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
-            var result = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(rootFolder)), ArtifactFolder);
-
-            if (!Directory.Exists(result))
-            {
-                Directory.CreateDirectory(result);
-            }
-
-            return result;
         }
 
         public static string GetNewTempFolder()

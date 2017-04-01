@@ -13,12 +13,6 @@ Additionally, it has the following characteristics:
   * File payload is generated dynamically.
 
 ##Components
-###Baseline
-Under directory `Baseline_DesktopCLR_MVC5_MultipartPOST` you can find a Windows-only baseline project that allows the client to upload large files. This baseline project uses MVC 5 and WebAPI 5 under the full desktop CLR. It exposes two endpoints:
-  * `~/`: where it displays a simple text message indicating the project is running. This is the "home" endpoint.
-  * `~/api/upload`: the actual upload endpoint, accepts POST messages with multipart content.
-The baseline project uses the stock multipart functionality that saves the files to disk before they can be processed by the server-side code.
-
 ###MultipartPOST
 Under directory `MultipartPOST` you can find the server side of this test. It exposes two endpoints:
   * `~/`: where it displays a simple text message indicating the project is running. This is the "home" endpoint.
@@ -38,8 +32,3 @@ If you'd like to run it manually, you can:
   4. Go to folder `MultipartPOSTClient`
   5. Execute: `dotnet restore`
   6. Execute: `dotnet run`
-
-If you want the client to hit the Baseline project, start the website and obtain the URL where it's exposed. If, for example, your baseline website is published under `http://localhost:28070/` you can then run the client with the following command:
-  1. Go to folder `MultipartPOSTClient`
-  2. Execute: `dotnet restore`
-  3. Execute: `dotnet run -u http://localhost:28070/`

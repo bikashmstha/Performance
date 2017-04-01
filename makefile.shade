@@ -1,7 +1,0 @@
-use-standard-lifecycle
-k-standard-goals
-
-#stress-test
-  @{
-    MSBuild("/t:StressTest");
-  }
