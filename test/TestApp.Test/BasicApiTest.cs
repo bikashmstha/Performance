@@ -6,19 +6,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Benchmarks.Framework;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.AspNetCore.Testing.xunit;
 using Xunit;
 
 namespace MvcBenchmarks.InMemory
 {
-    public class BasicApiTest
+    public class BasicApiTest : IClassFixture<TestAppFixture<BasicApi.Startup>>
     {
-        private static readonly TestServer Server;
-        private static readonly HttpClient Client;
-
         private static readonly byte[] ValidBytes = new UTF8Encoding(false).GetBytes(@"
 {
   ""category"" : {
@@ -45,37 +39,27 @@ namespace MvcBenchmarks.InMemory
   ""name"" : ""fluffy"",
   ""status"" : ""available""
 }");
+        private readonly HttpClient _client;
 
-        static BasicApiTest()
+        public BasicApiTest(TestAppFixture<BasicApi.Startup> fixture)
         {
-            try
-            {
-                var builder = new WebHostBuilder();
-                builder.UseStartup<BasicApi.Startup>();
-                builder.UseProjectOf<BasicApi.Startup>();
-                Server = new TestServer(builder);
-                Client = Server.CreateClient();
-            }
-            catch (System.Reflection.TargetInvocationException)
-            {
-                // ignore platform not supported exception, as we're skipping those platforms
-                // silently with OSSkipCondition attributes
-            }
+            _client = fixture.Client;
         }
 
         public async Task<string> GetAuthorizationToken()
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/token?username=writer@example.com");
             request.Headers.Add("Cache-Control", new [] {"no-cache"});
-            var response = await Client.SendAsync(request);
+
+            var response = await _client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
-        [OSSkipCondition(OperatingSystems.MacOSX)]
-        [OSSkipCondition(OperatingSystems.Linux)]
-        [Benchmark(Iterations = 1, WarmupIterations = 0)]
+        [ConditionalFact]
+        [OSSkipCondition(OperatingSystems.Linux, SkipReason = "No LocalDB on Linux.")]
+        [OSSkipCondition(OperatingSystems.MacOSX, SkipReason = "No LocalDB on OSX.")]
         public async Task BasicApi()
         {
             var authToken = await GetAuthorizationToken();
@@ -88,7 +72,7 @@ namespace MvcBenchmarks.InMemory
             request.Content = new ByteArrayContent(ValidBytes);
             request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }

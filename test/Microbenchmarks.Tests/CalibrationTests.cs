@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading;
+using System.Threading.Tasks;
 using Benchmarks.Framework;
 
 namespace Microbenchmarks.Tests
@@ -26,6 +27,14 @@ namespace Microbenchmarks.Tests
                 Thread.Sleep(100);
             }
         }
+
+        [Benchmark]
+        public async Task Calibration_100msAsync()
+        {
+            using (Collector.StartCollection())
+            {
+                await Task.Delay(100);
+            }
+        }
     }
 }
-

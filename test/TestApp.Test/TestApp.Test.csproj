@@ -2,16 +2,18 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;net46</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0</TargetFrameworks>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.json;config.json;seed.sql" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="*.json;seed.sql" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Benchmarks.Utility\Benchmarks.Utility.csproj" />
     <ProjectReference Include="..\..\testapp\BasicApi\BasicApi.csproj" />
     <ProjectReference Include="..\..\testapp\BasicViews\BasicViews.csproj" />
     <ProjectReference Include="..\..\testapp\BigModelBinding\BigModelBinding.csproj" />
@@ -19,14 +21,13 @@
     <ProjectReference Include="..\..\testapp\LargeStaticView\LargeStaticView.csproj" />
     <ProjectReference Include="..\..\testapp\LocalizedViews\LocalizedViews.csproj" />
     <ProjectReference Include="..\..\testapp\MusicStoreViews\MusicStoreViews.csproj" />
+    <ProjectReference Include="..\..\testapp\StarterMvc\StarterMvc.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="$(PlatformAbstractionsVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />

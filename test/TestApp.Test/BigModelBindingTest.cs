@@ -4,21 +4,15 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace MvcBenchmarks.InMemory
 {
-    public class BigModelBindingTest
+    public class BigModelBindingTest : IClassFixture<TestAppFixture<BigModelBinding.Startup>>
     {
-        private static readonly TestServer Server;
-        private static readonly HttpClient Client;
         private static readonly HttpContent Content;
-
         private static readonly byte[] ValidBytes = new UTF8Encoding(false).GetBytes(@"
 {
   ""category"" : {
@@ -28,27 +22,29 @@ namespace MvcBenchmarks.InMemory
   ""name"" : ""fluffy"",
   ""status"" : ""available""
 }");
+        private readonly HttpClient _client;
 
         static BigModelBindingTest()
         {
-            var builder = new WebHostBuilder();
-            builder.UseStartup<BigModelBinding.Startup>();
-            builder.UseProjectOf<BigModelBinding.Startup>();
-            Server = new TestServer(builder);
-            Client = Server.CreateClient();
-
             var inputFile = Path.Combine(HostingStartup.GetProjectDirectoryOf<BigModelBinding.Startup>(), "postdata.txt");
             var input = File.ReadAllText(inputFile);
             Content = new StringContent(input, Encoding.UTF8, "application/x-www-form-urlencoded");
         }
 
+        public BigModelBindingTest(TestAppFixture<BigModelBinding.Startup> fixture)
+        {
+            _client = fixture.Client;
+        }
+
         [Fact]
         public async Task BigModelBinding()
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "/");
-            request.Content = Content;
+            var request = new HttpRequestMessage(HttpMethod.Post, "/")
+            {
+                Content = Content
+            };
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

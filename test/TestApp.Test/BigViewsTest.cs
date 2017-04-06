@@ -4,24 +4,17 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace MvcBenchmarks.InMemory
 {
-    public class BigViewsTest
+    public class BigViewsTest : IClassFixture<TestAppFixture<BigViews.Startup>>
     {
-        private static readonly TestServer Server;
-        private static readonly HttpClient Client;
+        private readonly HttpClient _client;
 
-        static BigViewsTest()
+        public BigViewsTest(TestAppFixture<BigViews.Startup> fixture)
         {
-            var builder = new WebHostBuilder();
-            builder.UseStartup<BigViews.Startup>();
-            builder.UseProjectOf<BigViews.Startup>();
-            Server = new TestServer(builder);
-            Client = Server.CreateClient();
+            _client = fixture.Client;
         }
 
         [Fact]
@@ -29,7 +22,7 @@ namespace MvcBenchmarks.InMemory
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/Home/Index");
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -39,7 +32,7 @@ namespace MvcBenchmarks.InMemory
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/Home/IndexWithTagHelpers");
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -49,7 +42,7 @@ namespace MvcBenchmarks.InMemory
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "/Home/IndexWithStaticOptions");
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

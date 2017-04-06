@@ -31,25 +31,27 @@ namespace MvcBenchmarks.InMemory
 
         private static string GetTestAppRelativeFolder()
         {
-            if(_testAppRelativeFolder == null)
+            if (_testAppRelativeFolder == null)
             {
                 var appbase = PlatformServices.Default.Application.ApplicationBasePath;
                 var relativePath = TestAppFolderName;
-                for(int i = 1; i < MaxRelativeFolderTraversalDepth; i++)
+                for (int i = 1; i < MaxRelativeFolderTraversalDepth; i++)
                 {
                     relativePath = Path.Combine("..", relativePath);
                     var currentTry = Path.GetFullPath(Path.Combine(appbase, relativePath));
-                    if(Directory.Exists(currentTry))
+                    if (Directory.Exists(currentTry))
                     {
                         _testAppRelativeFolder = currentTry;
                         break;
                     }
                 }
-                if(_testAppRelativeFolder == null)
+
+                if (_testAppRelativeFolder == null)
                 {
                     throw new Exception($"Cannot determine the location of the '{TestAppFolderName}' folder");
                 }
             }
+
             return _testAppRelativeFolder;
         }
 

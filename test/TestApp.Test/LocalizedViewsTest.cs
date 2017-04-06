@@ -5,26 +5,18 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
 using Xunit;
 
 namespace MvcBenchmarks.InMemory
 {
-    public class LocalizedViewsTest
+    public class LocalizedViewsTest : IClassFixture<TestAppFixture<LocalizedViews.Startup>>
     {
-        private static readonly TestServer Server;
-        private static readonly HttpClient Client;
-
         private static readonly byte[] ValidBytes = new UTF8Encoding(false).GetBytes("name=Joey&age=15&birthdate=9-9-1985");
+        private readonly HttpClient _client;
 
-        static LocalizedViewsTest()
+        public LocalizedViewsTest(TestAppFixture<LocalizedViews.Startup> fixture)
         {
-            var builder = new WebHostBuilder();
-            builder.UseStartup<LocalizedViews.Startup>();
-            builder.UseProjectOf<LocalizedViews.Startup>();
-            Server = new TestServer(builder);
-            Client = Server.CreateClient();
+            _client = fixture.Client;
         }
 
         [Fact]
@@ -35,7 +27,7 @@ namespace MvcBenchmarks.InMemory
                 Content = new ByteArrayContent(ValidBytes),
             };
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -48,7 +40,7 @@ namespace MvcBenchmarks.InMemory
                 Content = new ByteArrayContent(ValidBytes),
             };
 
-            var response = await Client.SendAsync(request);
+            var response = await _client.SendAsync(request);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }

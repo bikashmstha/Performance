@@ -8,23 +8,22 @@ using Xunit;
 
 namespace MvcBenchmarks.InMemory
 {
-    public class MusicStoreViewsTest : IClassFixture<TestAppFixture<MusicStoreViews.Startup>>
+    public class LargeStaticViewTest : IClassFixture<TestAppFixture<LargeStaticView.Startup>>
     {
         private readonly HttpClient _client;
 
-        public MusicStoreViewsTest(TestAppFixture<MusicStoreViews.Startup> fixture)
+        public LargeStaticViewTest(TestAppFixture<LargeStaticView.Startup> fixture)
         {
             _client = fixture.Client;
         }
 
         [Theory]
-        [InlineData("AddressAndPayment")]
-        [InlineData("Create")]
-        [InlineData("Register")]
-        public async Task MusicStoreViews_ViewsAreSuccessful(string actionName)
+        [InlineData("")]
+        [InlineData("/TagHelpers")]
+        public async Task StaticView_ViewsAreSuccessful(string requestPath)
         {
             // Arrange & Act
-            var response = await _client.GetAsync($"/Home/{actionName}");
+            var response = await _client.GetAsync(requestPath);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
