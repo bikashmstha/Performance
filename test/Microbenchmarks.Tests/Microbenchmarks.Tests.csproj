@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Content Include="*.json;Mvc\Views\**\*" CopyToOutputDirectory="PreserveNewest" />
-    <EmbeddedResource Include="compiler\resources\**\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,15 +19,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.HttpSys" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.AspNetCore.Testing" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="$(DotNetInternalAbstractionsVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(TestSdkVersion)" />
     <PackageReference Include="xunit" Version="$(XunitVersion)" />
     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitVersion)" />

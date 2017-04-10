@@ -19,7 +19,6 @@
     <ProjectReference Include="..\..\testapp\LargeStaticView\LargeStaticView.csproj" />
     <ProjectReference Include="..\..\testapp\LocalizedViews\LocalizedViews.csproj" />
     <ProjectReference Include="..\..\testapp\MusicStoreViews\MusicStoreViews.csproj" />
-    <ProjectReference Include="..\..\testapp\RazorCodeGenerator\RazorCodeGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
