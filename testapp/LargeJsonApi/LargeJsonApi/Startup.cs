@@ -46,6 +46,7 @@ namespace LargeJsonApi
 
             var application = new WebHostBuilder()
                 .UseKestrel()
+                .UseUrls("http://+:5000")
                 .UseConfiguration(config)
                 .UseStartup<Startup>()
                 .Build();

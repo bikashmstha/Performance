@@ -1,8 +1,8 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Mvc;
 using LargeJsonApi.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace LargeJsonApi.Controllers
 {
@@ -17,13 +17,13 @@ namespace LargeJsonApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (id < 0 || id >= DataFactory.Movies.Value.Count)
+            if (id < 0 || id >= DataFactory.Movies.Count)
             {
-                return BadRequest($"The movie id { id } is outside of range, must be 0 to { DataFactory.Movies.Value.Count - 1 }");
+                return BadRequest($"The movie id { id } is outside of range, must be 0 to { DataFactory.Movies.Count - 1 }");
             }
 
             //obtain
-            var movie = DataFactory.Movies.Value[id];
+            var movie = DataFactory.Movies[id];
             return Ok(movie);
         }
 
@@ -52,13 +52,13 @@ namespace LargeJsonApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (id < 0 || id >= DataFactory.Series.Value.Count)
+            if (id < 0 || id >= DataFactory.Series.Count)
             {
-                return BadRequest($"The series id { id } is outside of range, must be 0 to { DataFactory.Series.Value.Count - 1 }");
+                return BadRequest($"The series id { id } is outside of range, must be 0 to { DataFactory.Series.Count - 1 }");
             }
 
             //obtain
-            var series = DataFactory.Series.Value[id];
+            var series = DataFactory.Series[id];
             return Ok(series);
         }
 
@@ -87,13 +87,13 @@ namespace LargeJsonApi.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (id < 0 || id >= DataFactory.Seasons.Value.Count)
+            if (id < 0 || id >= DataFactory.Seasons.Count)
             {
-                return BadRequest($"The season id { id } is outside of range, must be 0 to { DataFactory.Seasons.Value.Count - 1 }");
+                return BadRequest($"The season id { id } is outside of range, must be 0 to { DataFactory.Seasons.Count - 1 }");
             }
 
             //obtain
-            var season = DataFactory.Seasons.Value[id];
+            var season = DataFactory.Seasons[id];
             return Ok(season);
         }
 

@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -38,9 +40,21 @@ namespace StarterMvc
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddEntityFrameworkSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                {
+                    var connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ||
+                        !connectionString.StartsWith("Server=(localdb)"))
+                    {
+                        options.UseSqlServer(connectionString);
+                    }
+                    else
+                    {
+                        // Not a great database name but keeps things unique.
+                        options.UseInMemoryDatabase(connectionString);
+                    }
+                });
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -75,10 +89,18 @@ namespace StarterMvc
                 {
                     var dbContext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
 
-                    // We delete the pre-existing database first because each start of the Mvc site should be like running an app for the first time.
-                    dbContext.Database.EnsureDeleted();
+                    try
+                    {
+                        // We delete the pre-existing database first because each start of the Mvc site should be
+                        // like running an app for the first time.
+                        dbContext.Database.EnsureDeleted();
 
-                    dbContext.Database.Migrate();
+                        dbContext.Database.Migrate();
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Likely Migrate() threw because we're using an in-memory database. Ignore exception.
+                    }
                 }
             }
 
@@ -103,6 +125,7 @@ namespace StarterMvc
 
             var host = new WebHostBuilder()
                 .UseKestrel()
+                .UseUrls("http://+:5000")
                 .UseConfiguration(config)
                 .UseIISIntegration()
                 .UseContentRoot(Directory.GetCurrentDirectory())

@@ -39,6 +39,22 @@ namespace BasicApi.Controllers
             return new ObjectResult(pet);
         }
 
+        [HttpGet("findByCategory/{categoryId}")]
+        public async Task<IActionResult> FindByCategory(int categoryId)
+        {
+            var pet = await DbContext.Pets
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .Include(p => p.Tags)
+                .FirstOrDefaultAsync(p => p.Category != null && p.Category.Id == categoryId);
+            if (pet == null)
+            {
+                return new NotFoundResult();
+            }
+
+            return new JsonResult(pet);
+        }
+
         [HttpGet("findByStatus")]
         public async Task<IActionResult> FindByStatus(string status)
         {

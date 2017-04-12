@@ -76,5 +76,27 @@ namespace MvcBenchmarks.InMemory
 
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         }
+
+        [ConditionalFact]
+        [OSSkipCondition(OperatingSystems.Linux, SkipReason = "No LocalDB on Linux.")]
+        [OSSkipCondition(OperatingSystems.MacOSX, SkipReason = "No LocalDB on OSX.")]
+        public async Task BasicApi_GetsJson()
+        {
+            var authToken = await GetAuthorizationToken();
+
+            // Get a lion.
+            var request = new HttpRequestMessage(HttpMethod.Get, "/pet/findByCategory/4");
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", .9));
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml", .6));
+            request.Headers.AcceptCharset.Add(new StringWithQualityHeaderValue("utf-8"));
+            request.Headers.Add("Authorization", new[] { "Bearer " + authToken });
+
+            var response = await _client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json", response.Content.Headers.ContentType.MediaType);
+            Assert.NotNull(response.Content.Headers.ContentLength);
+            Assert.NotEqual(0, response.Content.Headers.ContentLength);
+        }
     }
 }
