@@ -1,12 +1,13 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System.Threading;
+using System.Threading.Tasks;
 using Benchmarks.Framework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Testing.xunit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -15,14 +16,10 @@ namespace Microbenchmarks.Tests
 {
     public class HostingTests : BenchmarkTestBase
     {
-        [OSSkipCondition(OperatingSystems.MacOSX)]
-        [OSSkipCondition(OperatingSystems.Linux)]
         [Benchmark]
-        [BenchmarkVariation("Kestrel", "Microsoft.AspNetCore.Server.Kestrel")]
-        [BenchmarkVariation("HttpSys", "Microsoft.AspNetCore.Server.HttpSys")]
-        public void MainToConfigureOverhead(string variationServer)
+        public void MainToConfigureOverhead()
         {
-            var args = new[] { "--server", variationServer, "--captureStartupErrors", "true" };
+            var args = new[] { "--captureStartupErrors", "true" };
 
             using (Collector.StartCollection())
             {
@@ -33,7 +30,6 @@ namespace Microbenchmarks.Tests
 
                 var builder = new WebHostBuilder()
                     .UseConfiguration(config)
-                    .UseKestrel()
                     .UseStartup(typeof(TestStartup))
                     .ConfigureServices(ConfigureTestServices);
 
@@ -45,16 +41,12 @@ namespace Microbenchmarks.Tests
 
         private void ConfigureTestServices(IServiceCollection services)
         {
-            services.AddSingleton(new TestServer());
+            services.AddSingleton(typeof(IServer), new TestServer());
             services.AddSingleton(Collector);
         }
 
         private class TestStartup
         {
-            public void ConfigureServices(IServiceCollection services)
-            {
-            }
-
             public void Configure(IApplicationBuilder app, IMetricCollector collector)
             {
                 collector.StopCollection();
@@ -63,19 +55,22 @@ namespace Microbenchmarks.Tests
 
         private class TestServer : IServer
         {
-            public TestServer()
+            public IFeatureCollection Features { get; }
+
+            public Task StartAsync<TContext>(IHttpApplication<TContext> application, CancellationToken cancellationToken)
             {
+                // No-op, we don't want to actually start the server.
+                return Task.CompletedTask;
+            }
+
+            public Task StopAsync(CancellationToken cancellationToken)
+            {
+                // No-op, nothing to stop.
+                return Task.CompletedTask;
             }
 
             public void Dispose()
             {
-            }
-
-            public IFeatureCollection Features { get; }
-
-            public void Start<TContext>(IHttpApplication<TContext> application)
-            {
-                // No-op, we don't want to actually start the server.
             }
         }
     }
