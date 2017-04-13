@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\testapp\BasicViews\BasicViews.csproj" />
     <ProjectReference Include="..\..\testapp\BigModelBinding\BigModelBinding.csproj" />
     <ProjectReference Include="..\..\testapp\BigViews\BigViews.csproj" />
+    <ProjectReference Include="..\..\testapp\LargeStaticFile\LargeStaticFile.csproj" />
     <ProjectReference Include="..\..\testapp\LargeStaticView\LargeStaticView.csproj" />
     <ProjectReference Include="..\..\testapp\LocalizedViews\LocalizedViews.csproj" />
     <ProjectReference Include="..\..\testapp\MusicStoreViews\MusicStoreViews.csproj" />
