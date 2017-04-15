@@ -45,7 +45,8 @@ namespace Stress.Framework
             var fullTestName = $"{_testMethodName}.{_testName}.{framework}";
             fullTestName = fullTestName.Replace('_', '.');
 
-            _logger = LogUtility.LoggerFactory.CreateLogger(fullTestName);
+            var loggerFactory = LogUtility.LoggerFactory;
+            _logger = loggerFactory.CreateLogger(fullTestName);
 
             var baseAddress = $"http://localhost:{_port}/";
 
@@ -60,12 +61,12 @@ namespace Stress.Framework
                 TargetFramework = Runtimes.GetFrameworkName(framework),
             };
 
-            var deployerLogger = StressConfig.Instance.DeployerLogging ?
-                _logger :
-                NullLoggerFactory.Instance.CreateLogger(fullTestName);
+            var deployerLoggerFactory = StressConfig.Instance.DeployerLogging ?
+                loggerFactory :
+                NullLoggerFactory.Instance;
 
-            _applicationDeployer = ApplicationDeployerFactory.Create(p, deployerLogger);
-            var deploymentResult = _applicationDeployer.Deploy();
+            _applicationDeployer = ApplicationDeployerFactory.Create(p, deployerLoggerFactory);
+            var deploymentResult = _applicationDeployer.DeployAsync().Result;
             baseAddress = deploymentResult.ApplicationBaseUri;
 
             _logger.LogInformation($"Test project is set up at {deploymentResult.ContentRoot}");

@@ -43,9 +43,9 @@ namespace Benchmarks.Utility.Helpers
                 // This is a quick fix to turn around the build before the fix in Hosting eventually goes online
                 parameters.ApplicationBaseUriHint = "http://localhost:0";
 
-                var deployer = ApplicationDeployerFactory.Create(parameters, loggerFactory.CreateLogger<IISTestManager>());
+                var deployer = ApplicationDeployerFactory.Create(parameters, loggerFactory);
 
-                var result = deployer.Deploy();
+                var result = deployer.DeployAsync().Result;
                 _deployments[sample] = result;
                 _deployer.Add(deployer);
             }
