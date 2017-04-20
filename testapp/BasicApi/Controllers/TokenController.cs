@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -38,10 +37,10 @@ namespace BasicApi.Controllers
         private readonly JwtBearerOptions _options;
 
         public TokenController(
-            IOptions<JwtBearerOptions> options,
+            IOptionsSnapshot<JwtBearerOptions> options,
             SigningCredentials credentials)
         {
-            _options = options.Value;
+            _options = options.Get(JwtBearerDefaults.AuthenticationScheme);
             _credentials = credentials;
         }
 

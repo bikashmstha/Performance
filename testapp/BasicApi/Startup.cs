@@ -38,10 +38,8 @@ namespace BasicApi
                 key,
                 SecurityAlgorithms.RsaSha256Signature));
 
-            services.Configure<JwtBearerOptions>(options =>
+            services.AddJwtBearerAuthentication(options =>
             {
-                options.AutomaticAuthenticate = false;
-                options.AutomaticChallenge = false;
                 options.TokenValidationParameters.IssuerSigningKey = key;
                 options.TokenValidationParameters.ValidAudience = "Myself";
                 options.TokenValidationParameters.ValidIssuer = "BasicApi";
@@ -72,7 +70,6 @@ namespace BasicApi
 
             services
                 .AddMvcCore()
-                .AddAuthorization()
                 .AddJsonFormatters(json => json.ContractResolver = new CamelCasePropertyNamesContractResolver())
                 .AddDataAnnotations();
 
@@ -96,8 +93,7 @@ namespace BasicApi
                 }
             });
 
-            app.UseJwtBearerAuthentication();
-
+            app.UseAuthentication();
             app.UseMvc();
         }
 

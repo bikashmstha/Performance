@@ -4,18 +4,23 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.Extensions.Internal;
+using System.Runtime.InteropServices;
+using RuntimeEnvironment = Microsoft.Extensions.Internal.RuntimeEnvironment;
 
 namespace Benchmarks.Utility.Helpers
 {
     public class DotnetHelper
     {
         private static readonly DotnetHelper _default = new DotnetHelper();
-        private readonly string _dotnetAppName = "dotnet";
+        private static readonly string _dotnetAppName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ?
+            "dotnet.exe" :
+            "dotnet";
 
         public static DotnetHelper GetDefaultInstance() => _default;
 
-        private DotnetHelper() { }
+        private DotnetHelper()
+        {
+        }
 
         public ProcessStartInfo BuildStartInfo(
             string appbasePath,
@@ -78,22 +83,32 @@ namespace Benchmarks.Utility.Helpers
 
         public string GetDotnetPath()
         {
-            string path = null;
-            var envDotnetHomeVariable = Environment.GetEnvironmentVariable("DOTNET_INSTALL_DIR");
-            if (envDotnetHomeVariable != null && Directory.Exists(path = Environment.ExpandEnvironmentVariables(envDotnetHomeVariable)))
+            var path = Environment.GetEnvironmentVariable("DOTNET_INSTALL_DIR");
+            if (path != null && File.Exists(Path.Combine(path, _dotnetAppName)))
             {
                 return path;
             }
+
             var envHome = Environment.GetEnvironmentVariable("HOME");
-            if (envHome != null && Directory.Exists(path = Path.Combine(envHome, ".dotnet")))
+            if (envHome != null)
             {
-                return path;
+                path = Path.Combine(envHome, ".dotnet");
+                if (File.Exists(Path.Combine(path, _dotnetAppName)))
+                {
+                    return path;
+                }
             }
+
             var envLocalAppData = Environment.GetEnvironmentVariable("LocalAppData");
-            if (envLocalAppData != null && Directory.Exists(path = Path.Combine(envLocalAppData, "Microsoft", "dotnet")))
+            if (envLocalAppData != null)
             {
-                return path;
+                path = Path.Combine(envLocalAppData, "Microsoft", "dotnet");
+                if (File.Exists(Path.Combine(path, _dotnetAppName)))
+                {
+                    return path;
+                }
             }
+
             return null;
         }
 
@@ -104,6 +119,7 @@ namespace Benchmarks.Utility.Helpers
             {
                 return Path.Combine(dotnetPath, _dotnetAppName);
             }
+
             return _dotnetAppName;
         }
     }

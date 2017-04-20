@@ -3,7 +3,6 @@
     <AspNetCoreIntegrationTestingVersion>0.4.0-*</AspNetCoreIntegrationTestingVersion>
     <AspNetCoreVersion>2.0.0-*</AspNetCoreVersion>
     <CoreFxVersion>4.3.0</CoreFxVersion>
-    <DotNetInternalAbstractionsVersion>1.0.0</DotNetInternalAbstractionsVersion>
     <InternalAspNetCoreSdkVersion>2.0.0-*</InternalAspNetCoreSdkVersion>
     <JsonNetVersion>10.0.1</JsonNetVersion>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
