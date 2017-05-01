@@ -22,28 +22,24 @@ namespace Benchmarks.Utility.Helpers
         {
         }
 
-        public ProcessStartInfo BuildStartInfo(
-            string appbasePath,
-            string argument)
+        public ProcessStartInfo BuildStartInfo(string appbasePath, string arguments)
         {
             var dotnetPath = GetDotnetExecutable();
-            var psi = new ProcessStartInfo(dotnetPath, argument)
+            var psi = new ProcessStartInfo(dotnetPath, arguments)
             {
                 WorkingDirectory = appbasePath,
-                UseShellExecute = _dotnetAppName.Equals(dotnetPath)
             };
 
             return psi;
         }
 
-        public bool Restore(string workingDir, bool quiet = false, bool useShellExecute = false)
+        public bool Restore(string workingDir, bool quiet = false)
         {
             var dotnet = GetDotnetExecutable();
             var psi = new ProcessStartInfo(dotnet)
             {
                 Arguments = "restore" + (quiet ? " --verbosity minimal" : string.Empty),
                 WorkingDirectory = workingDir,
-                UseShellExecute = useShellExecute
             };
 
             var proc = Process.Start(psi);
@@ -53,7 +49,7 @@ namespace Benchmarks.Utility.Helpers
             return exited && proc.ExitCode == 0;
         }
 
-        public bool Publish(string workingDir, string outputDir, string framework, bool useShellExecute = false)
+        public bool Publish(string workingDir, string outputDir, string framework)
         {
             if (string.IsNullOrEmpty(framework))
             {
@@ -67,7 +63,6 @@ namespace Benchmarks.Utility.Helpers
             {
                 Arguments = $"publish --output \"{outputDir}\" --framework {framework}",
                 WorkingDirectory = workingDir,
-                UseShellExecute = useShellExecute
             };
 
             var proc = Process.Start(psi);

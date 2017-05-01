@@ -5,7 +5,6 @@
     <CoreFxVersion>4.3.0</CoreFxVersion>
     <InternalAspNetCoreSdkVersion>2.0.0-*</InternalAspNetCoreSdkVersion>
     <JsonNetVersion>10.0.1</JsonNetVersion>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <PlatformAbstractionsVersion>1.2.0-*</PlatformAbstractionsVersion>
     <RuntimeFrameworkVersion>2.0.0-*</RuntimeFrameworkVersion>
     <SystemNetHttpVersion>4.3.1</SystemNetHttpVersion>
