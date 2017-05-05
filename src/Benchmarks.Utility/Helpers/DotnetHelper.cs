@@ -5,7 +5,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using RuntimeEnvironment = Microsoft.Extensions.Internal.RuntimeEnvironment;
 
 namespace Benchmarks.Utility.Helpers
 {
@@ -56,7 +55,7 @@ namespace Benchmarks.Utility.Helpers
                 // Provide required argument where multiple targets are supported. Use same framework as the running
                 // test because all test sites support .NET Core App and .NET Framework. Test itself won't run under
                 // .NET Framework unless on Windows.
-                framework = Runtimes.GetFrameworkName(RuntimeEnvironment.RuntimeType);
+                framework = Runtimes.GetFrameworkName("CoreCLR");
             }
 
             var psi = new ProcessStartInfo(GetDotnetExecutable())

@@ -4,7 +4,6 @@
 using System.IO;
 using Benchmarks.Framework;
 using Benchmarks.Utility.Helpers;
-using Microsoft.Extensions.Internal;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Performance
@@ -23,7 +22,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [BenchmarkVariation("DotnetPublish_StarterMvc", "StarterMvc")]
         public void DotnetPublish(string sampleName)
         {
-            var framework = RuntimeEnvironment.RuntimeType;
+            var framework = "CoreCLR";
             var testName = $"{sampleName}.{framework}.{nameof(DotnetPublish)}";
             var testProject = _sampleManager.GetRestoredSample(sampleName);
             Assert.True(testProject != null, "Failed to set up test project.");

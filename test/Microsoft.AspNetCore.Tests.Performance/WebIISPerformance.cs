@@ -36,7 +36,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
         [OSSkipCondition(OperatingSystems.Linux)]
         [OSSkipCondition(OperatingSystems.MacOSX)]
         [Benchmark(Iterations = 1, WarmupIterations = 0, Skip = "Requires optional IIS Express enabled on test machine")]
-        [BenchmarkVariation("StarterMvc_IISScenario", "StarterMvc", RuntimeFlavor.Clr, Framework = "DNX.Clr")]
         [BenchmarkVariation("StarterMvc_IISScenario", "StarterMvc", RuntimeFlavor.CoreClr, Framework = "DNX.CoreClr")]
         public void Startup(string sampleName, RuntimeFlavor runtimeFlavor)
         {

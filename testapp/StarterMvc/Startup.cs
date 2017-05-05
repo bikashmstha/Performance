@@ -68,11 +68,8 @@ namespace StarterMvc
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -120,10 +117,18 @@ namespace StarterMvc
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
                 .AddCommandLine(args)
                 .Build();
 
             var host = new WebHostBuilder()
+                .ConfigureLogging(loggerFactory =>
+                {
+                    loggerFactory.AddConsole();
+                    loggerFactory.UseConfiguration(config.GetSection("Logging"));
+                    loggerFactory.AddDebug();
+                })
                 .UseKestrel()
                 .UseUrls("http://+:5000")
                 .UseConfiguration(config)

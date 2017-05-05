@@ -43,16 +43,9 @@ namespace PerformanceDashboard
             services.AddScoped<BenchmarkRepository>();
         }
 
-        public void Configure(
-            IApplicationBuilder app,
-            IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
-            BenchmarkContext dbContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, BenchmarkContext dbContext)
         {
             dbContext.Database.EnsureCreated();
-
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
@@ -77,9 +70,17 @@ namespace PerformanceDashboard
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
                 .AddCommandLine(args)
                 .Build();
             var host = new WebHostBuilder()
+                .ConfigureLogging(loggerFactory =>
+                {
+                    loggerFactory.AddConsole();
+                    loggerFactory.UseConfiguration(config.GetSection("Logging"));
+                    loggerFactory.AddDebug();
+                })
                 .UseConfiguration(config)
                 .UseIISIntegration()
                 .UseContentRoot(Directory.GetCurrentDirectory())

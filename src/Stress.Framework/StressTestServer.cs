@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Benchmarks.Utility.Helpers;
 using Benchmarks.Utility.Logging;
 using Microsoft.AspNetCore.Server.IntegrationTesting;
-using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -41,7 +40,7 @@ namespace Stress.Framework
 
         public async Task<StressTestServerStartResult> StartAsync()
         {
-            var framework = RuntimeEnvironment.RuntimeType;
+            var framework = "CoreCLR";
             var fullTestName = $"{_testMethodName}.{_testName}.{framework}";
             fullTestName = fullTestName.Replace('_', '.');
 
@@ -53,7 +52,7 @@ namespace Stress.Framework
             var p = new DeploymentParameters(
                 PathHelper.GetTestAppFolder(_testName),
                 _serverType,
-                Runtimes.GetRuntimeFlavor(framework),
+                RuntimeFlavor.CoreClr,
                 RuntimeArchitecture.x64)
             {
                 SiteName = _testName,

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MvcBenchmarks.InMemory
 {
@@ -33,7 +32,7 @@ namespace MvcBenchmarks.InMemory
         {
             if (_testAppRelativeFolder == null)
             {
-                var appbase = PlatformServices.Default.Application.ApplicationBasePath;
+                var appbase = AppContext.BaseDirectory;
                 var relativePath = TestAppFolderName;
                 for (int i = 1; i < MaxRelativeFolderTraversalDepth; i++)
                 {

@@ -8,13 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Benchmarks.Framework.BenchmarkPersistence;
-#if NETCOREAPP2_0
-using Microsoft.Extensions.Configuration;
-#endif
-using Microsoft.Extensions.Internal;
-#if NETCOREAPP2_0
-using Microsoft.Extensions.PlatformAbstractions;
-#endif
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -131,23 +124,12 @@ namespace Benchmarks.Framework
 
         private static string GetFramework()
         {
-            return "DNX." + RuntimeEnvironment.RuntimeType;
+            return "DNX.CoreCLR";
         }
 
         private static string GetMachineName()
         {
-#if NET46
             return Environment.MachineName;
-#elif NETCOREAPP2_0
-            var config = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
-                .AddEnvironmentVariables()
-                .Build();
-
-            return config["computerName"];
-#else
-#error The target frameworks need to be updated
-#endif
         }
 
         private class BenchmarkTestRunner : XunitTestRunner
@@ -227,9 +209,7 @@ namespace Benchmarks.Framework
             protected override object CreateTestClass()
             {
                 var testClass = base.CreateTestClass();
-                var benchmarkTestBase = testClass as IBenchmarkTest;
-
-                if (benchmarkTestBase != null)
+                if (testClass is IBenchmarkTest benchmarkTestBase)
                 {
                     benchmarkTestBase.Collector = _metricCollector;
                 }

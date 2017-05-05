@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Benchmarks.Framework;
@@ -10,7 +11,6 @@ using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Microbenchmarks.Tests
 {
@@ -25,7 +25,7 @@ namespace Microbenchmarks.Tests
             {
                 var config = new ConfigurationBuilder()
                     .AddCommandLine(args)
-                    .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
+                    .SetBasePath(AppContext.BaseDirectory)
                     .Build();
 
                 var builder = new WebHostBuilder()

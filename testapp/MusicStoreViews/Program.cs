@@ -3,6 +3,7 @@
 
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace MusicStoreViews
 {
@@ -11,6 +12,11 @@ namespace MusicStoreViews
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
+                .ConfigureLogging(loggerFactory =>
+                {
+                    loggerFactory.AddConsole();
+                    loggerFactory.AddFilter("Console", level => level >= LogLevel.Error);
+                })
                 .UseKestrel()
                 .UseUrls("http://+:5000")
                 .UseContentRoot(Directory.GetCurrentDirectory())

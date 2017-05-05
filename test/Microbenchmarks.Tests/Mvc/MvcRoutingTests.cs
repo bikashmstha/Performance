@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Microbenchmarks.Tests.Mvc
 {
@@ -18,7 +17,7 @@ namespace Microbenchmarks.Tests.Mvc
         [Benchmark]
         public async Task RouteToAction()
         {
-            var contentRoot = PlatformServices.Default.Application.ApplicationBasePath;
+            var contentRoot = AppContext.BaseDirectory;
 
             var builder = new WebHostBuilder()
                 .Configure(app => app.UseMvcWithDefaultRoute())

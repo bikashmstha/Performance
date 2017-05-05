@@ -2,7 +2,7 @@
   <Import Project="..\..\build\common.props" />
 
   <PropertyGroup>
-    <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet5-StarterMvc-a41e748d-679d-48cc-a9f2-81b486f3512c</UserSecretsId>
   </PropertyGroup>
 

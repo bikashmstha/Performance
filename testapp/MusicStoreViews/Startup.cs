@@ -3,7 +3,6 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MusicStoreViews.Models;
 
 namespace MusicStoreViews
@@ -21,10 +20,8 @@ namespace MusicStoreViews
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app)
         {
-            loggerFactory.AddConsole(minLevel: LogLevel.Error, includeScopes: false);
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

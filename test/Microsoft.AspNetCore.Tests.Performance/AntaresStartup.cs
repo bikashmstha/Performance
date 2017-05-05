@@ -9,13 +9,7 @@ using Benchmarks.Framework;
 using Benchmarks.Framework.BenchmarkPersistence;
 using Benchmarks.Utility.Azure;
 using Benchmarks.Utility.Helpers;
-#if NETCOREAPP2_0
-using Microsoft.Extensions.Configuration;
-#endif
 using Microsoft.Extensions.Logging;
-#if NETCOREAPP2_0
-using Microsoft.Extensions.PlatformAbstractions;
-#endif
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tests.Performance
@@ -24,7 +18,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
     {
         protected readonly BenchmarkRunSummary _summary;
         protected readonly int _iterationCount = 1;
-        protected readonly ILoggerFactory _loggerFactory;
+        protected readonly LoggerFactory _loggerFactory;
 
         private readonly string _location = "North Central US";
         private readonly string _username;
@@ -68,7 +62,6 @@ namespace Microsoft.AspNetCore.Tests.Performance
         }
 
         [Theory(Skip = "Requires azure subscription on test machine")]
-        [InlineData("StarterMvc", "clr")]
         [InlineData("StarterMvc", "coreclr")]
         public void PublishAndRun(string sampleName, string framework)
         {
@@ -143,7 +136,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
             _log.LogInformation($"Use azure subscription {subscription}");
 
-            int retry = 0;
+            var retry = 0;
             while (retry < 10)
             {
                 _testsitename = GenerateRandomWebsiteName();
@@ -171,7 +164,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
         {
             var password = new char[32];
 
-            int i = 0;
+            var i = 0;
             for (; i < 12; ++i)
             {
                 password[i] = (char)_rand.Next(65, 91);
@@ -221,18 +214,7 @@ namespace Microsoft.AspNetCore.Tests.Performance
 
         private static string GetMachineName()
         {
-#if NET46
             return Environment.MachineName;
-#elif NETCOREAPP2_0
-            var config = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
-                .AddEnvironmentVariables()
-                .Build();
-
-            return config["computerName"];
-#else
-#error The target frameworks need to be updated
-#endif
         }
     }
 }

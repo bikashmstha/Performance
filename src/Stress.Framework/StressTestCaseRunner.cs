@@ -7,13 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-#if NETCOREAPP2_0
-using Microsoft.Extensions.Configuration;
-#endif
-using Microsoft.Extensions.Internal;
-#if NETCOREAPP2_0
-using Microsoft.Extensions.PlatformAbstractions;
-#endif
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -133,23 +126,12 @@ namespace Stress.Framework
 
         private static string GetFramework()
         {
-            return "DNX." + RuntimeEnvironment.RuntimeType;
+            return "DNX.CoreCLR";
         }
 
         private static string GetMachineName()
         {
-#if NET46
             return Environment.MachineName;
-#elif NETCOREAPP2_0
-            var config = new ConfigurationBuilder()
-                .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
-                .AddEnvironmentVariables()
-                .Build();
-
-            return config["computerName"];
-#else
-#error The target frameworks need to be updated
-#endif
         }
 
         private class StressTestRunner : XunitTestRunner
@@ -229,9 +211,7 @@ namespace Stress.Framework
             protected override object CreateTestClass()
             {
                 var testClass = base.CreateTestClass();
-                var StressTestBase = testClass as StressTestBase;
-
-                if (StressTestBase != null)
+                if (testClass is StressTestBase StressTestBase)
                 {
                     var stressTestCase = (TestCase as StressTestCase);
                     StressTestBase.Iterations = stressTestCase.Iterations;
@@ -245,21 +225,21 @@ namespace Stress.Framework
 
             protected override Task BeforeTestMethodInvokedAsync()
             {
-                var stressTestCase = this.TestCase as StressTestCase;
-                if (stressTestCase != null)
+                if (TestCase is StressTestCase stressTestCase)
                 {
                     stressTestCase.MetricReporter.Start(MessageBus, stressTestCase);
                 }
+
                 return base.BeforeTestMethodInvokedAsync();
             }
 
             protected override Task AfterTestMethodInvokedAsync()
             {
-                var testCase = this.TestCase as StressTestCase;
-                if (testCase != null)
+                if (TestCase is StressTestCase testCase)
                 {
                     testCase.MetricReporter.Stop();
                 }
+
                 return base.AfterTestMethodInvokedAsync();
             }
         }

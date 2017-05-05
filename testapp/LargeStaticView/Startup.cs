@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace LargeStaticView
 {
@@ -17,7 +16,7 @@ namespace LargeStaticView
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, ILoggerFactory logger)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseMvc(routes =>
             {

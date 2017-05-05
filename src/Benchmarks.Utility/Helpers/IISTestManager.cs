@@ -28,7 +28,6 @@ namespace Benchmarks.Utility.Helpers
 
             var sampleList = new Tuple<string, RuntimeFlavor>[]
             {
-                Tuple.Create("StarterMvc", RuntimeFlavor.Clr),
                 Tuple.Create("StarterMvc", RuntimeFlavor.CoreClr)
             };
 

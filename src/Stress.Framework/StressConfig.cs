@@ -3,7 +3,6 @@
 
 using System;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Stress.Framework
 {
@@ -12,7 +11,7 @@ namespace Stress.Framework
         private static readonly Lazy<StressConfig> _instance = new Lazy<StressConfig>(() =>
             {
                 var config = new ConfigurationBuilder()
-                    .SetBasePath(PlatformServices.Default.Application.ApplicationBasePath)
+                    .SetBasePath(AppContext.BaseDirectory)
                     .AddJsonFile("config.json")
                     .AddEnvironmentVariables()
                     .Build();

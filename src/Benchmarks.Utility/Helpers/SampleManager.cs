@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Benchmarks.Utility.Helpers
 {
@@ -102,7 +101,7 @@ namespace Benchmarks.Utility.Helpers
         {
             private static readonly string _pathToNugetConfig = GetPathToNugetConfig();
             private static readonly string _rootFolder =
-                PathHelper.GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+                PathHelper.GetRootFolder(AppContext.BaseDirectory);
             private static readonly string _buildFolder = Path.Combine(_rootFolder, "build");
 
             private static string GetPathToNugetConfig()
@@ -111,7 +110,7 @@ namespace Benchmarks.Utility.Helpers
                 // Typically, it'll be found at ..\..\NuGet.config, but it may vary depending on execution preferences.
                 const string nugetConfigFileName = "NuGet.config";
                 const int maxRelativeFolderTraversalDepth = 10; // how many ".." will we attempt adding looking for NuGet.config?
-                var appbase = PlatformServices.Default.Application.ApplicationBasePath;
+                var appbase = AppContext.BaseDirectory;
                 var relativePath = nugetConfigFileName;
                 for (var i = 1; i < maxRelativeFolderTraversalDepth; i++)
                 {
@@ -123,7 +122,7 @@ namespace Benchmarks.Utility.Helpers
                     relativePath = Path.Combine("..", relativePath);
                 }
 
-                throw new Exception($"Cannot determine the location of '{nugetConfigFileName}' from base path '{PlatformServices.Default.Application.ApplicationBasePath}'");
+                throw new Exception($"Cannot determine the location of '{nugetConfigFileName}' from base path '{AppContext.BaseDirectory}'");
             }
 
             private RestoredSample(string name)

@@ -1,8 +1,8 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.IO;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Benchmarks.Utility.Helpers
 {
@@ -31,14 +31,14 @@ namespace Benchmarks.Utility.Helpers
 
         public static string GetNuGetConfig()
         {
-            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+            var rootFolder = GetRootFolder(AppContext.BaseDirectory);
 
             return Path.Combine(rootFolder, "NuGet.config");
         }
 
         public static string GetTestAppFolder(string sampleName)
         {
-            var rootFolder = GetRootFolder(PlatformServices.Default.Application.ApplicationBasePath);
+            var rootFolder = GetRootFolder(AppContext.BaseDirectory);
             var sampleFolder = Path.Combine(rootFolder, TestAppFolder, sampleName);
 
             if (Directory.Exists(sampleFolder))
