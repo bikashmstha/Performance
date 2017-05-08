@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.IntegrationTesting" Version="$(AspNetCoreIntegrationTestingVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.RuntimeEnvironment.Sources" Version="$(AspNetCoreVersion)" PrivateAssets="All" />
     <PackageReference Include="xunit.runner.reporters" Version="$(XunitVersion)" />
   </ItemGroup>
 </Project>

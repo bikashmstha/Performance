@@ -13,6 +13,5 @@
     <PackageReference Include="Microsoft.AspNetCore.Server.IntegrationTesting" Version="$(AspNetCoreIntegrationTestingVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="$(AspNetCoreVersion)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="$(AspNetCoreVersion)" />
-    <PackageReference Include="Microsoft.Extensions.RuntimeEnvironment.Sources" Version="$(AspNetCoreVersion)" PrivateAssets="All" />
   </ItemGroup>
 </Project>
