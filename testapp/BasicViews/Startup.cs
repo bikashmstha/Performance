@@ -76,6 +76,7 @@ namespace BasicViews
                 .UseKestrel()
                 .UseUrls("http://+:5000")
                 .UseConfiguration(config)
+                .UseIISIntegration()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();

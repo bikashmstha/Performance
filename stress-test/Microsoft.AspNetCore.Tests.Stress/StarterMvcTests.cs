@@ -100,13 +100,13 @@ namespace Microsoft.AspNetCore.Tests.Stress
             string password,
             string confirmPassword)
         {
-            List<KeyValuePair<string, string>> form = new List<KeyValuePair<string, string>>();
-
-            form.Add(new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken));
-            form.Add(new KeyValuePair<string, string>("Email", email));
-            form.Add(new KeyValuePair<string, string>("Password", password));
-            form.Add(new KeyValuePair<string, string>("ConfirmPassword", confirmPassword));
-
+            var form = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken),
+                new KeyValuePair<string, string>("Email", email),
+                new KeyValuePair<string, string>("Password", password),
+                new KeyValuePair<string, string>("ConfirmPassword", confirmPassword)
+            };
             var content = new FormUrlEncodedContent(form);
 
             return content;
@@ -114,13 +114,13 @@ namespace Microsoft.AspNetCore.Tests.Stress
 
         private HttpContent CreateLoginPost(string verificationToken, string email, string password)
         {
-            List<KeyValuePair<string, string>> form = new List<KeyValuePair<string, string>>();
-
-            form.Add(new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken));
-            form.Add(new KeyValuePair<string, string>("Email", email));
-            form.Add(new KeyValuePair<string, string>("Password", password));
-            form.Add(new KeyValuePair<string, string>("RememberMe", false.ToString()));
-
+            var form = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken),
+                new KeyValuePair<string, string>("Email", email),
+                new KeyValuePair<string, string>("Password", password),
+                new KeyValuePair<string, string>("RememberMe", false.ToString())
+            };
             var content = new FormUrlEncodedContent(form);
 
             return content;
@@ -128,10 +128,10 @@ namespace Microsoft.AspNetCore.Tests.Stress
 
         private HttpContent CreateLogOffPost(string verificationToken)
         {
-            List<KeyValuePair<string, string>> form = new List<KeyValuePair<string, string>>();
-
-            form.Add(new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken));
-
+            var form = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("__RequestVerificationToken", verificationToken)
+            };
             var content = new FormUrlEncodedContent(form);
 
             return content;
@@ -139,7 +139,7 @@ namespace Microsoft.AspNetCore.Tests.Stress
 
         private string ExtractVerificationToken(string response)
         {
-            string tokenElement = string.Empty;
+            var tokenElement = string.Empty;
             var writer = new StreamWriter(new MemoryStream());
             writer.Write(response);
 
@@ -154,7 +154,7 @@ namespace Microsoft.AspNetCore.Tests.Stress
                 }
             }
 
-            XElement root = XElement.Parse(tokenElement);
+            var root = XElement.Parse(tokenElement);
             return (string)root.Attribute("value");
         }
 
