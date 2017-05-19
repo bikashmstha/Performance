@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Server.IntegrationTesting;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using NullMessageSink = Xunit.Sdk.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 
 namespace Stress.Framework
@@ -19,9 +18,6 @@ namespace Stress.Framework
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         protected StressTestCaseBase()
         {
-            // No way for us to get access to the message sink on the execution de-serialization path.
-            // Fortunately, have reported errors during discovery.
-            DiagnosticMessageSink = new NullMessageSink();
         }
 
         public StressTestCaseBase(
@@ -41,14 +37,10 @@ namespace Stress.Framework
             TestMethodName = name;
             WarmupMethod = warmupMethod;
             DisplayName = name;
-
-            DiagnosticMessageSink = diagnosticMessageSink;
             ServerType = serverType;
         }
 
         public string TestApplicationName { get; private set; }
-
-        protected IMessageSink DiagnosticMessageSink { get; private set; }
 
         public abstract IStressMetricCollector MetricCollector { get; }
 

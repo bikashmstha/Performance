@@ -8,7 +8,6 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
-using NullMessageSink = Xunit.Sdk.NullMessageSink;
 using TestMethodDisplay = Xunit.Sdk.TestMethodDisplay;
 
 namespace Benchmarks.Framework
@@ -22,9 +21,6 @@ namespace Benchmarks.Framework
         [Obsolete("Called by the de-serializer; should only be called by deriving classes for de-serialization purposes")]
         protected BenchmarkTestCaseBase()
         {
-            // No way for us to get access to the message sink on the execution de-serialization path.
-            // Fortunately, have reported errors during discovery.
-            DiagnosticMessageSink = new NullMessageSink();
         }
 
         public BenchmarkTestCaseBase(
@@ -42,8 +38,6 @@ namespace Benchmarks.Framework
 
             TestMethodName = name;
             DisplayName = $"{name} [Variation: {variation}]";
-
-            DiagnosticMessageSink = diagnosticMessageSink;
             Variation = variation;
 
             var potentialMetricCollector = testMethod.Method.GetParameters().FirstOrDefault();
@@ -63,8 +57,6 @@ namespace Benchmarks.Framework
                 TestMethodArguments = testMethodArguments;
             }
         }
-
-        protected IMessageSink DiagnosticMessageSink { get; }
 
         public abstract IMetricCollector MetricCollector { get; }
 
