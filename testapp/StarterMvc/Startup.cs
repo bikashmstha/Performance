@@ -123,11 +123,11 @@ namespace StarterMvc
                 .Build();
 
             var host = new WebHostBuilder()
-                .ConfigureLogging(loggerFactory =>
+                .ConfigureLogging(loggingBuilder =>
                 {
-                    loggerFactory.AddConsole();
-                    loggerFactory.UseConfiguration(config.GetSection("Logging"));
-                    loggerFactory.AddDebug();
+                    loggingBuilder.AddConfiguration(config.GetSection("Logging"));
+                    loggingBuilder.AddConsole();
+                    loggingBuilder.AddDebug();
                 })
                 .UseKestrel()
                 .UseUrls("http://+:5000")
