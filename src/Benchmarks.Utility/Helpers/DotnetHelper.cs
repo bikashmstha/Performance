@@ -78,30 +78,15 @@ namespace Benchmarks.Utility.Helpers
         public string SearchForDotNetInWellKnownPlaces()
         {
             var path = Environment.GetEnvironmentVariable("DOTNET_HOME");
-            if (path != null)
+            if (path != null && File.Exists(Path.Combine(path, _dotnetAppName)))
             {
-                if (File.Exists(Path.Combine(path, _dotnetAppName)))
-                {
-                    return path;
-                }
-
-                path = Path.Combine(path, RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant());
-                if (File.Exists(Path.Combine(path, _dotnetAppName)))
-                {
-                    return path;
-                }
+                return path;
             }
 
             var envHome = Environment.GetEnvironmentVariable("USERPROFILE") ?? Environment.GetEnvironmentVariable("HOME");
             if (envHome != null)
             {
                 path = Path.Combine(envHome, ".dotnet");
-
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    path = Path.Combine(path, RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant());
-                }
-
                 if (File.Exists(Path.Combine(path, _dotnetAppName)))
                 {
                     return path;
