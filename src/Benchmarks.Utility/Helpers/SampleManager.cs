@@ -152,7 +152,7 @@ namespace Benchmarks.Utility.Helpers
                     copyCommand = "robocopy";
                     copyBuildParameters = $"\"{_buildFolder}\" \"{buildTarget}\" /S /NC /NP /NJS /NS";
                     copyNugetConfigParameters = $"\"{_pathToNugetConfig}\" \"{TemporaryPath}\" NuGet.config /NC /NP /NJS /NS";
-                    copyPropsParameters = $"\"{_rootFolder}\" \"{TemporaryPath}\" *.json *.props *.targets /NC /NP /NJS /NS";
+                    copyPropsParameters = $"\"{_rootFolder}\" \"{TemporaryPath}\" *.xml *.json *.props *.targets /NC /NP /NJS /NS";
                     copySampleParameters = $"\"{SourcePath}\" \"{target}\" /S /XD bin node_modules obj /NC /NP /NJS /NS";
                 }
                 else
@@ -160,7 +160,7 @@ namespace Benchmarks.Utility.Helpers
                     copyCommand = "rsync";
                     copyBuildParameters = $"\"{_buildFolder}/\"*.* \"{buildTarget}\"";
                     copyNugetConfigParameters = $"\"{_pathToNugetConfig}/NuGet.config\" \"{TemporaryPath}/NuGet.config\"";
-                    copyPropsParameters = "--include=*.json --include=*.props --include=*.targets --exclude=*.* " +
+                    copyPropsParameters = "--include=*.json --include=*.props --include=*.xml --include=*.targets --exclude=*.* " +
                         $"\"{_rootFolder}/\"*.* \"{TemporaryPath}\"";
                     copySampleParameters = "--recursive --exclude=bin/ --exclude=node_modules/ --exclude=obj/ " +
                         $"\"{SourcePath}/\" \"{target}/\"";

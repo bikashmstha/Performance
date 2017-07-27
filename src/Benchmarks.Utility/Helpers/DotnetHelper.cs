@@ -75,18 +75,33 @@ namespace Benchmarks.Utility.Helpers
             return Publish(workingDir, outputDir, framework: null);
         }
 
-        public string GetDotnetPath()
+        public string SearchForDotNetInWellKnownPlaces()
         {
-            var path = Environment.GetEnvironmentVariable("DOTNET_INSTALL_DIR");
-            if (path != null && File.Exists(Path.Combine(path, _dotnetAppName)))
+            var path = Environment.GetEnvironmentVariable("DOTNET_HOME");
+            if (path != null)
             {
-                return path;
+                if (File.Exists(Path.Combine(path, _dotnetAppName)))
+                {
+                    return path;
+                }
+
+                path = Path.Combine(path, RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant());
+                if (File.Exists(Path.Combine(path, _dotnetAppName)))
+                {
+                    return path;
+                }
             }
 
-            var envHome = Environment.GetEnvironmentVariable("HOME");
+            var envHome = Environment.GetEnvironmentVariable("USERPROFILE") ?? Environment.GetEnvironmentVariable("HOME");
             if (envHome != null)
             {
                 path = Path.Combine(envHome, ".dotnet");
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    path = Path.Combine(path, RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant());
+                }
+
                 if (File.Exists(Path.Combine(path, _dotnetAppName)))
                 {
                     return path;
@@ -108,7 +123,14 @@ namespace Benchmarks.Utility.Helpers
 
         public string GetDotnetExecutable()
         {
-            var dotnetPath = GetDotnetPath();
+            var mainModule = Process.GetCurrentProcess().MainModule.FileName;
+            if (mainModule != null
+                && Path.GetFileNameWithoutExtension(mainModule).ToLowerInvariant() == "dotnet")
+            {
+                return mainModule;
+            }
+
+            var dotnetPath = SearchForDotNetInWellKnownPlaces();
             if (dotnetPath != null)
             {
                 return Path.Combine(dotnetPath, _dotnetAppName);
