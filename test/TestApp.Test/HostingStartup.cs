@@ -64,10 +64,10 @@ namespace MvcBenchmarks.InMemory
             {
                 var hostingEnvironment = new HostingEnvironment();
                 hostingEnvironment.Initialize(
-                    applicationName,
                     webRoot,
                     new WebHostOptions
                     {
+                        ApplicationName = applicationName,
                         Environment = "Production"
                     });
                 services.AddSingleton<IHostingEnvironment>(hostingEnvironment);
