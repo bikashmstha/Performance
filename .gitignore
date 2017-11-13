@@ -38,4 +38,3 @@ nuget.exe
 .build/
 .testPublish/
 global.json
-korebuild-lock.txt

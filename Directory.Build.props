@@ -1,0 +1,15 @@
+<Project>
+  <Import Project="version.props" />
+  <Import Project="build/dependencies.props" />
+
+  <PropertyGroup>
+    <Product>Microsoft ASP.NET Core MVC</Product>
+    <RepositoryUrl>https://github.com/aspnet/Performance</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+    <SignAssembly>false</SignAssembly>
+    <PublicSign Condition="'$(OS)' != 'Windows_NT'">false</PublicSign>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>
